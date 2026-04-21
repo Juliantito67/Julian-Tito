@@ -2,165 +2,197 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Pac-Man Game</title>
+<title>Pac-Man Ultimate Wiki</title>
+
+<!-- Pixel Font -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
 body {
+    margin: 0;
     background: black;
+    font-family: 'Press Start 2P', cursive;
     color: white;
     text-align: center;
-    font-family: Arial;
 }
 
-canvas {
-    background: black;
-    display: block;
-    margin: 20px auto;
-    border: 3px solid blue;
-    box-shadow: 0 0 20px blue;
+/* TITLE */
+.title {
+    font-size: 60px;
+    color: yellow;
+    text-shadow: 0 0 20px yellow;
+    margin-top: 30px;
 }
+
+.subtitle {
+    background: white;
+    color: hotpink;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+/* PACMAN HEADER */
+.header {
+    margin-top: 30px;
+}
+
+.pacman {
+    font-size: 50px;
+    color: yellow;
+    animation: chomp 0.5s infinite alternate;
+}
+
+@keyframes chomp {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(20deg); }
+}
+
+/* BUTTONS */
+.btn {
+    display: block;
+    width: 300px;
+    margin: 15px auto;
+    padding: 15px;
+    background: #555;
+    border-radius: 30px;
+    text-decoration: none;
+    color: white;
+}
+
+/* SECTION BOX */
+.box {
+    width: 80%;
+    margin: 30px auto;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #00f0ff;
+    box-shadow: 0 0 20px #00f0ff;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+/* GRID */
+.grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 40%;
+    background: rgba(0,0,0,0.8);
+    border: 2px solid pink;
+    box-shadow: 0 0 15px pink;
+    padding: 15px;
+    margin: 10px;
+}
+
+/* IMAGE STYLE */
+.creator img {
+    width: 200px;
+    border: 5px solid white;
+    transform: rotate(-5deg);
+}
+
+/* NEON MAZE BACKGROUND EFFECT */
+.maze-bg {
+    background-image:
+        linear-gradient(blue 2px, transparent 2px),
+        linear-gradient(90deg, blue 2px, transparent 2px);
+    background-size: 40px 40px;
+    box-shadow: inset 0 0 50px blue;
+}
+
+/* PLAY SECTION */
+.play {
+    margin-top: 40px;
+}
+
+.play-btn {
+    padding: 15px 40px;
+    font-size: 18px;
+    background: white;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* GHOST COLORS */
+.ghosts span {
+    display: inline-block;
+    margin: 5px;
+}
+
+.red { color: red; text-shadow: 0 0 10px red; }
+.pink { color: pink; text-shadow: 0 0 10px pink; }
+.cyan { color: cyan; text-shadow: 0 0 10px cyan; }
+.orange { color: orange; text-shadow: 0 0 10px orange; }
+
 </style>
 </head>
 
-<body>
+<body class="maze-bg">
 
-<h1>Pac-Man Game</h1>
-<p>Use arrow keys to move</p>
-<p id="score">Score: 0</p>
+<div class="title">PAC-MAN</div>
+<div class="subtitle">ULTIMATE WIKI</div>
 
-<canvas id="game" width="400" height="400"></canvas>
+<div class="header">
+    <div class="pacman">◉ ● ● ● 👻 👻 👻 👻</div>
+</div>
 
-<script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+<a href="#history" class="btn">HOW IT ALL STARTED</a>
+<a href="#characters" class="btn">CHARACTERS</a>
 
-const tileSize = 20;
-const rows = 20;
-const cols = 20;
+<!-- CREATOR -->
+<div id="history" class="box creator">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Toru_Iwatani.jpg">
+    <p>
+        TORU IWATANI IS A JAPANESE GAME DESIGNER WHO CREATED PAC-MAN IN 1980.
+        HE WANTED A NON-VIOLENT, FUN GAME FOR EVERYONE, DIFFERENT FROM SHOOTERS.
+    </p>
+</div>
 
-let score = 0;
+<!-- GAMEPLAY + CHARACTERS -->
+<div class="grid">
 
-// 0 = dot, 1 = wall
-let map = [
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
-[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-];
+    <div class="card">
+        <h3>PAC-MAN</h3>
+        <p>
+            A YELLOW CHARACTER THAT EATS DOTS THROUGH A MAZE.
+            HE MUST AVOID GHOSTS WHILE COLLECTING POINTS.
+        </p>
+    </div>
 
-// PLAYER
-let player = {
-    x: 1,
-    y: 1,
-    dx: 0,
-    dy: 0
-};
+    <div class="card ghosts">
+        <h3>GHOSTS</h3>
+        <p>
+            <span class="red">BLINKY</span>
+            <span class="pink">PINKY</span>
+            <span class="cyan">INKY</span>
+            <span class="orange">CLYDE</span>
+        </p>
+        <p>
+            THEY CHASE PAC-MAN. POWER PELLETS TURN THEM BLUE SO THEY CAN BE EATEN.
+        </p>
+    </div>
 
-// GHOST
-let ghost = {
-    x: 18,
-    y: 1
-};
+</div>
 
-// CONTROLS
-document.addEventListener("keydown", e => {
-    if (e.key === "ArrowUp") { player.dx = 0; player.dy = -1; }
-    if (e.key === "ArrowDown") { player.dx = 0; player.dy = 1; }
-    if (e.key === "ArrowLeft") { player.dx = -1; player.dy = 0; }
-    if (e.key === "ArrowRight") { player.dx = 1; player.dy = 0; }
-});
+<!-- GAME -->
+<div class="play">
+    <h2>FREE GAMEPLAY HERE</h2>
 
-// UPDATE
-function update() {
-    let nx = player.x + player.dx;
-    let ny = player.y + player.dy;
+    <iframe 
+        src="https://www.google.com/logos/2010/pacman10-i.html"
+        width="600"
+        height="400"
+        style="border:3px solid blue; box-shadow:0 0 20px blue;">
+    </iframe>
 
-    if (map[ny][nx] !== 1) {
-        player.x = nx;
-        player.y = ny;
-    }
-
-    // eat dots
-    if (map[player.y][player.x] === 0) {
-        map[player.y][player.x] = -1;
-        score++;
-        document.getElementById("score").innerText = "Score: " + score;
-    }
-
-    // ghost simple chase
-    if (ghost.x < player.x) ghost.x++;
-    else if (ghost.x > player.x) ghost.x--;
-
-    if (ghost.y < player.y) ghost.y++;
-    else if (ghost.y > player.y) ghost.y--;
-
-    // collision
-    if (ghost.x === player.x && ghost.y === player.y) {
-        alert("Game Over!");
-        location.reload();
-    }
-
-    // win
-    if (score > 150) {
-        alert("You Win!");
-        location.reload();
-    }
-}
-
-// DRAW
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-
-            if (map[y][x] === 1) {
-                ctx.fillStyle = "blue";
-                ctx.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
-            }
-
-            if (map[y][x] === 0) {
-                ctx.fillStyle = "white";
-                ctx.beginPath();
-                ctx.arc(x*tileSize+10, y*tileSize+10, 3, 0, Math.PI*2);
-                ctx.fill();
-            }
-        }
-    }
-
-    // player
-    ctx.fillStyle = "yellow";
-    ctx.beginPath();
-    ctx.arc(player.x*tileSize+10, player.y*tileSize+10, 8, 0.2*Math.PI, 1.8*Math.PI);
-    ctx.lineTo(player.x*tileSize+10, player.y*tileSize+10);
-    ctx.fill();
-
-    // ghost
-    ctx.fillStyle = "red";
-    ctx.fillRect(ghost.x*tileSize, ghost.y*tileSize, 20, 20);
-}
-
-// GAME LOOP
-function loop() {
-    update();
-    draw();
-}
-
-setInterval(loop, 200);
-</script>
+    <br><br>
+    <button class="play-btn">Play</button>
+</div>
 
 </body>
 </html>
