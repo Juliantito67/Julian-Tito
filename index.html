@@ -2,611 +2,710 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Pac-Man Arcade — Classic Maze Chase</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>RACMAN · Ultimate Wiki | Pac-Man Tribute</title>
   <style>
     * {
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      background: linear-gradient(145deg, #0a0f1e 0%, #03060c 100%);
-      min-height: 100vh;
+      background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+      font-family: 'Courier New', 'Fira Code', 'VT323', monospace;
+      color: #f0f3ff;
+      padding: 2rem 1.5rem;
+    }
+
+    /* main retro container */
+    .wiki-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(2px);
+      border: 3px solid #ffd966;
+      border-radius: 32px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 200, 0.2);
+      padding: 2rem 2rem 2.5rem;
+      transition: all 0.2s;
+    }
+
+    /* ultimate header */
+    .ultimate-header {
+      text-align: center;
+      border-bottom: 3px dashed #ffb347;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 4.5rem;
+      letter-spacing: 6px;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #FFE484, #FFB347, #FF7E05);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 6px #ff9f4a;
+      font-family: 'Courier New', monospace;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #1e1a2f;
+      padding: 0.3rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      border-left: 4px solid #ffc857;
+      color: #ffdd99;
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+
+    /* grid layout */
+    .wiki-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0 1.5rem;
+    }
+
+    /* cards */
+    .wiki-card {
+      background: rgba(10, 14, 23, 0.85);
+      border-radius: 28px;
+      border: 1px solid #ffcd7e;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .wiki-card:hover {
+      transform: translateY(-5px);
+      border-color: #ffaa33;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-title {
+      background: #000000aa;
+      padding: 0.9rem 1.5rem;
+      font-size: 1.7rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      border-bottom: 2px solid #ffb347;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+      font-family: monospace;
+    }
+
+    .card-title span {
+      font-size: 2rem;
+    }
+
+    .card-content {
+      padding: 1.5rem;
+      font-size: 1rem;
+      line-height: 1.45;
+      color: #eef4ff;
+    }
+
+    .card-content p {
+      margin-bottom: 1rem;
+    }
+
+    /* ghosts gallery */
+    .ghost-team {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 15px 0 5px;
+    }
+
+    .ghost {
+      text-align: center;
+      background: #0f121eb3;
+      border-radius: 30px;
+      padding: 8px 12px;
+      flex: 1;
+      min-width: 65px;
+      font-weight: bold;
+    }
+
+    .ghost-name {
+      font-size: 1.2rem;
+      display: block;
+    }
+
+    .red-ghost { color: #ff5e6e; text-shadow: 0 0 2px red; }
+    .pink-ghost { color: #ffb7c5; text-shadow: 0 0 2px hotpink; }
+    .cyan-ghost { color: #6ad4ff; text-shadow: 0 0 2px cyan; }
+    .orange-ghost { color: #ffb347; text-shadow: 0 0 2px orange; }
+
+    /* PAC-MAN SHAPE */
+    .pacman-demo {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Courier New', 'VT323', 'Monaco', monospace;
-      margin: 0;
-      padding: 20px;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin: 20px 0 10px;
+      background: #00000055;
+      border-radius: 50px;
+      padding: 15px;
     }
 
-    .game-container {
-      background: #000000aa;
-      border-radius: 2rem;
-      padding: 1.5rem 2rem 2rem 2rem;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-      backdrop-filter: blur(1px);
+    .pac-icon {
+      font-size: 4rem;
+      filter: drop-shadow(0 0 6px #ffcc44);
+      animation: chomp 0.5s infinite alternate ease-in-out;
+      display: inline-block;
+    }
+
+    @keyframes chomp {
+      0% { transform: scale(0.95); opacity: 0.9; text-shadow: 0 0 0px gold;}
+      100% { transform: scale(1.1); text-shadow: 0 0 12px #ffb347;}
+    }
+
+    .dot-maze {
+      font-family: monospace;
+      font-size: 1.3rem;
+      letter-spacing: 4px;
+      background: #01050e;
+      padding: 6px 12px;
+      border-radius: 30px;
+    }
+
+    /* free gameplay area */
+    .gameplay-section {
+      margin-top: 2rem;
+      background: #020617c9;
+      border-radius: 40px;
+      padding: 1rem 1.5rem 1.8rem;
+      border: 2px solid #f5b642;
+      text-align: center;
+    }
+
+    .gameplay-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.8rem;
+    }
+
+    .gameplay-header h2 {
+      font-size: 2rem;
+      font-family: monospace;
+      background: #f5b64220;
+      display: inline-block;
+      padding: 0 20px;
+      border-radius: 40px;
+      letter-spacing: 3px;
+    }
+
+    .interactive-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
     }
 
     canvas {
+      background: #0a0c1a;
+      border-radius: 28px;
+      box-shadow: 0 0 0 3px #ffc857, 0 10px 25px black;
+      cursor: pointer;
+      max-width: 100%;
+      height: auto;
       display: block;
       margin: 0 auto;
-      box-shadow: 0 0 0 6px #ffd966, 0 0 0 12px #b87c2e, 0 10px 30px rgba(0,0,0,0.6);
-      border-radius: 8px;
-      cursor: pointer;
     }
 
-    .info-panel {
+    .game-controls {
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-top: 1rem;
-      background: #11141fcc;
-      padding: 0.7rem 1.5rem;
-      border-radius: 60px;
-      backdrop-filter: blur(4px);
-      border: 1px solid #ffc85755;
-    }
-
-    .score-box, .high-box {
-      background: #000000aa;
-      padding: 0.3rem 1.2rem;
-      border-radius: 2rem;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-
-    .score-box span, .high-box span {
-      color: #ffd966;
-      font-size: 1rem;
-      text-transform: uppercase;
-    }
-
-    .score-box .score-value, .high-box .high-value {
-      color: #ffecb3;
-      font-size: 2rem;
-      font-weight: bold;
-      text-shadow: 0 0 5px #ffb347;
-      margin-left: 0.5rem;
-    }
-
-    .controls {
-      display: flex;
-      gap: 1.2rem;
-      margin-top: 1.2rem;
+      gap: 18px;
+      flex-wrap: wrap;
       justify-content: center;
+      margin-top: 10px;
     }
 
-    button {
-      background: #2a2418;
+    .ctrl-btn {
+      background: #1e2a2f;
       border: none;
-      font-size: 1.6rem;
+      font-size: 1.9rem;
+      padding: 8px 22px;
+      border-radius: 60px;
       font-weight: bold;
+      color: #ffd966;
       font-family: monospace;
-      padding: 0.4rem 1.2rem;
-      border-radius: 40px;
-      color: #f7d44a;
-      box-shadow: 0 4px 0 #5a3e1a;
       cursor: pointer;
-      transition: 0.07s linear;
+      transition: 0.1s linear;
+      box-shadow: 0 4px 0 #5a3e1a;
     }
 
-    button:active {
+    .ctrl-btn:active {
       transform: translateY(2px);
       box-shadow: 0 1px 0 #5a3e1a;
     }
 
     .status {
+      font-size: 1rem;
       background: #000000aa;
-      padding: 0.3rem 1rem;
-      border-radius: 2rem;
-      font-size: 1.2rem;
+      padding: 8px 20px;
+      border-radius: 50px;
+      display: inline-flex;
+      gap: 20px;
       font-weight: bold;
-      color: #f5bc70;
-      text-align: center;
-      letter-spacing: 1px;
     }
 
-    @media (max-width: 700px) {
-      .game-container {
-        padding: 0.8rem 1rem 1.2rem;
+    .reset-btn {
+      background: #d45a2b;
+      color: white;
+      box-shadow: 0 4px 0 #732c0a;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 0.7rem;
+      color: #bbaa77;
+      border-top: 1px dashed #ffb34760;
+      padding-top: 1.2rem;
+    }
+
+    @media (max-width: 720px) {
+      .wiki-container {
+        padding: 1.2rem;
       }
-      .score-box .score-value, .high-box .high-value {
-        font-size: 1.5rem;
+      h1 {
+        font-size: 2.5rem;
       }
-      button {
-        font-size: 1.2rem;
-        padding: 0.2rem 0.8rem;
+      .card-title {
+        font-size: 1.3rem;
       }
     }
   </style>
 </head>
 <body>
-<div>
-  <div class="game-container">
-    <canvas id="gameCanvas" width="560" height="620"></canvas>
-    <div class="info-panel">
-      <div class="score-box"><span>🍒 SCORE</span> <span class="score-value" id="scoreDisplay">0</span></div>
-      <div class="high-box"><span>🏆 HIGH</span> <span class="high-value" id="highScoreDisplay">2610</span></div>
-      <div class="status" id="statusMsg">⚡ READY?</div>
+<div class="wiki-container">
+  <div class="ultimate-header">
+    <h1>⚡ RACMAN ⚡</h1>
+    <div class="badge">ULTIMATE WIKI · 1980 ARCADE LEGACY</div>
+  </div>
+
+  <div class="wiki-grid">
+    <!-- ORIGIN CARD: Toru Iwatani & How it all started -->
+    <div class="wiki-card">
+      <div class="card-title"><span>🎮</span> HOW IT ALL STARTED</div>
+      <div class="card-content">
+        <p><strong>TORU IWATANI</strong> — Japanese video game designer, creator of <span style="color:#FFD966;">PAC-MAN</span>. In the late 1970s, while at NAMCO, he rejected violent "shooting" games and aimed to create something <strong>friendly, accessible, and universal</strong>.</p>
+        <p>That vision became <strong>PAC-MAN (1980)</strong> — a maze-chase where players guide a yellow hero eating dots, outsmarting ghosts. No guns, no war, just pure arcade charm. A revolution!</p>
+        <div style="background:#00000055; border-radius: 20px; padding: 8px; margin-top: 12px; text-align:center;">
+          🕹️ <em>"Eating dots and running from ghosts — fun for everyone"</em> — Iwatani
+        </div>
+      </div>
     </div>
-    <div class="controls">
-      <button id="upBtn">▲ UP</button>
-      <button id="leftBtn">◀ LEFT</button>
-      <button id="downBtn">▼ DOWN</button>
-      <button id="rightBtn">▶ RIGHT</button>
-      <button id="resetBtn">🔄 RESTART</button>
+
+    <!-- GAME PLANS / PAC-MAN -->
+    <div class="wiki-card">
+      <div class="card-title"><span>🟡</span> GAME PLANS · PAC-MAN</div>
+      <div class="card-content">
+        <p><strong>PAC-MAN</strong> is a yellow, circle-shaped character with a chomping mouth. He travels through a blue maze, gobbling white pellets while avoiding four unique ghosts. The player controls direction — always in motion, strategic turns, and survival instincts.</p>
+        <div class="pacman-demo">
+          <div class="pac-icon">ᗧ</div>
+          <div class="dot-maze">● ● ● ◌ ◌ ◌ ◆</div>
+          <div style="font-size: 2rem;">👻</div>
+        </div>
+        <p><strong>Power Pellet!</strong> Eat the large flashing pellet → ghosts turn blue → chomp them for bonus points. Maze cleared? Next level, faster ghosts!</p>
+      </div>
+    </div>
+
+    <!-- GHOSTS CARD : detailed -->
+    <div class="wiki-card">
+      <div class="card-title"><span>👻</span> CHARACTERS · GHOSTS</div>
+      <div class="card-content">
+        <p>Four infamous ghosts, each with unique chasing AI:</p>
+        <div class="ghost-team">
+          <div class="ghost"><span class="ghost-name red-ghost">BLINKY</span> 🔴<br> <small>red · shadow</small></div>
+          <div class="ghost"><span class="ghost-name pink-ghost">PINKY</span> 💗<br> <small>pink · ambush</small></div>
+          <div class="ghost"><span class="ghost-name cyan-ghost">INKY</span> 💙<br> <small>cyan · random-ish</small></div>
+          <div class="ghost"><span class="ghost-name orange-ghost">CLYDE</span> 🧡<br> <small>orange · fool</small></div>
+        </div>
+        <p>When PAC-MAN eats a <strong style="color:#ffcc66;">Power Pellet</strong>, ghosts turn blue & vulnerable! Eat 'em for extra points. After a short while, they regenerate & resume hunting.</p>
+        <p style="margin-top: 12px;"><em>⚡ Classic dynamic: each ghost has distinct personality — Blinky chases directly, Pinky predicts, Inky uses complex logic, Clyde alternates.</em></p>
+      </div>
     </div>
   </div>
-  <div style="text-align:center; margin-top: 1rem; font-size:0.8rem; color:#ccaa66;">⬆️ arrow keys or WASD • eat dots • avoid ghosts (blue = edible)</div>
+
+  <!-- FREE GAMEPLAY HERE: interactive mini Pac-Man style demo -->
+  <div class="gameplay-section">
+    <div class="gameplay-header">
+      <h2>🍒 FREE GAMEPLAY HERE 🕹️</h2>
+      <span style="background:#000; padding:5px 12px; border-radius: 30px;">⬆️ ⬇️ ⬅️ ➡️</span>
+    </div>
+    <div class="interactive-zone">
+      <canvas id="gameCanvas" width="560" height="400" style="width:100%; max-width:560px; height:auto; aspect-ratio:560/400"></canvas>
+      <div class="game-controls">
+        <button class="ctrl-btn" id="btnUp">▲ UP</button>
+        <button class="ctrl-btn" id="btnLeft">◀ LEFT</button>
+        <button class="ctrl-btn" id="btnDown">▼ DOWN</button>
+        <button class="ctrl-btn" id="btnRight">▶ RIGHT</button>
+        <button class="ctrl-btn reset-btn" id="btnReset">⟳ RESET</button>
+      </div>
+      <div class="status">
+        <span>🍒 SCORE: <span id="scoreValue">0</span></span>
+        <span>💀 LIVES: <span id="livesValue">3</span></span>
+        <span>✨ POWER MODE: <span id="powerModeIndicator">OFF</span></span>
+      </div>
+      <p style="font-size: 0.75rem; margin-top: 10px;">★ Move PAC-MAN, eat dots (●), avoid ghosts (👻) — unless they're BLUE! Eat power pellet (★) to turn ghosts blue. Survive & feel the arcade ★</p>
+    </div>
+  </div>
+  <footer>
+    Ⓒ ULTIMATE WIKI · PAC-MAN TRIBUTE · created for arcade lovers · ghosts, dots, and retro vibes
+  </footer>
 </div>
 
 <script>
   (function(){
-    // ---------- PAC-MAN ARCADE ----------
-    // Classic maze layout (21x23) based on original style, but adapted to 560x620 canvas (tile 20x20, with top/bottom margins)
-    // Dimensions: cols = 28, rows = 31? but typical pacman is 19x21? let's use 28x31 for better fidelity? but we need stable
-    // I'll make tile size 20px, maze 28 cols x 31 rows => 560x620 perfect.
-    // Maze layout: 0 = wall, 1 = pellet, 2 = power pellet, 3 = empty, 4 = ghost door area (tunnel)
-    const COLS = 28;
-    const ROWS = 31;
-    const TILE_SIZE = 20;
+    // ----- CANVAS GAME: simplified PAC-MAN tribute (maze, dots, ghosts, power pellet)
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
     
-    // Classic inspired maze (mirrors arcade style)
-    const mazeLayout = [
-      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      [0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0],
-      [0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
-      [0,2,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,2,0],
-      [0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
-      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-      [0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0],
-      [0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0],
-      [0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0],
-      [0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0],
-      [0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0],
-      [0,0,0,0,0,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0],
-      [0,0,0,0,0,0,1,0,0,1,0,0,0,4,4,0,0,0,1,0,0,1,0,0,0,0,0,0],
-      [0,0,0,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,0,0,0],
-      [0,0,0,0,0,0,1,0,0,1,0,4,4,4,4,4,4,0,1,0,0,1,0,0,0,0,0,0],
-      [0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0],
-      [0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0],
-      [0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0],
-      [0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
-      [0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
-      [0,2,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,2,0],
-      [0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0],
-      [0,0,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0],
-      [0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0],
-      [0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0],
-      [0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0],
-      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    // Maze layout (20x15 cells, each cell 28x28? canvas 560x400 -> 28px per cell? 20*28=560, 15*28=420 -> but canvas height 400 -> adjust Y: 15 rows * 26.66? better fixed grid 20x14? But to look neat, we make 20 columns x 14 rows (cell 28x28 = 560x392, perfect)
+    // dimensions: 20 cols, 14 rows, cell size 28px
+    const CELL_SIZE = 28;
+    const COLS = 20;
+    const ROWS = 14;
+    canvas.width = COLS * CELL_SIZE;
+    canvas.height = ROWS * CELL_SIZE;
+    
+    // Classic simplified maze (walls 1, path 0, dot 2, power pellet 3)
+    // Custom maze based on iconic layout
+    const rawMaze = [
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,2,1,1,2,1,1,2,1,1,2,1,1,1,2,1],
+      [1,3,1,1,1,2,1,1,2,1,1,2,1,1,2,1,1,1,3,1],  // power pellet at start left+right
+      [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
+      [1,2,1,1,1,2,1,2,1,1,1,1,2,1,2,1,1,1,2,1],
+      [1,2,2,2,1,2,2,2,2,1,1,2,2,2,2,1,2,2,2,1],
+      [1,1,1,2,1,2,1,1,1,1,1,1,1,1,2,1,2,1,1,1],
+      [1,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,1],  // center tunnel
+      [1,2,1,1,1,2,1,1,1,1,1,1,1,1,2,1,1,1,2,1],
+      [1,2,2,2,1,2,2,2,2,2,2,2,2,2,2,1,2,2,2,1],
+      [1,3,1,2,1,1,1,1,2,1,1,2,1,1,1,1,2,1,3,1],
+      [1,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
     ];
-    // ensure ROWS matches
-    // we have 28 rows? verify: layout length = 28? actually rows from 0..27 (28 rows) but our ROWS=31, fill missing bottom rows with walls
-    while(mazeLayout.length < ROWS) mazeLayout.push(Array(COLS).fill(0));
-    for(let i=0;i<ROWS;i++) if(mazeLayout[i].length<COLS) mazeLayout[i] = mazeLayout[i].concat(Array(COLS-mazeLayout[i].length).fill(0));
     
-    // pellets and power pellets storage
-    let pellets = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
-    let powerPellets = Array(ROWS).fill().map(()=>Array(COLS).fill(false));
-    let totalPellets = 0;
+    // dynamic grid: store pellets/power pellets states
+    let grid = rawMaze.map(row => [...row]);
     
-    function initMazeEntities(){
-      totalPellets = 0;
-      for(let row=0;row<ROWS;row++){
-        for(let col=0;col<COLS;col++){
-          const cell = mazeLayout[row][col];
-          if(cell === 1){
-            pellets[row][col] = true;
-            powerPellets[row][col] = false;
-            totalPellets++;
-          } else if(cell === 2){
-            pellets[row][col] = true;  // power pellet also counts as pellet to eat
-            powerPellets[row][col] = true;
-            totalPellets++;
-          } else {
-            pellets[row][col] = false;
-            powerPellets[row][col] = false;
-          }
+    // game state
+    let pacman = { x: 1, y: 1, dir: 'right', nextDir: 'right' };
+    let score = 0;
+    let lives = 3;
+    let powerMode = false;
+    let powerTimer = 0;
+    let ghosts = [
+      { x: 9, y: 6, color: '#FF5E6E', name: 'blinky', mode: 'chase', scatterTimer: 0, dir: 'left' },
+      { x: 10, y: 6, color: '#FFB7C5', name: 'pinky', mode: 'chase', dir: 'right' },
+      { x: 9, y: 7, color: '#6AD4FF', name: 'inky', mode: 'chase', dir: 'up' },
+      { x: 10, y: 7, color: '#FFB347', name: 'clyde', mode: 'chase', dir: 'down' }
+    ];
+    
+    let gameLoopId = null;
+    let gameActive = true;
+    
+    // helper: count dots remaining for win condition
+    function countDotsLeft() {
+      let cnt = 0;
+      for(let i=0;i<ROWS;i++){
+        for(let j=0;j<COLS;j++){
+          if(grid[i][j] === 2 || grid[i][j] === 3) cnt++;
         }
       }
-    }
-    initMazeEntities();
-    
-    // ----- Ghost definitions (classic personalities) -----
-    class Ghost {
-      constructor(name, color, startCol, startRow, modeDelay=0){
-        this.name = name;
-        this.color = color;
-        this.x = startCol;
-        this.y = startRow;
-        this.targetCol = startCol;
-        this.targetRow = startRow;
-        this.mode = 'chase'; // chase, scatter, frightened
-        this.frightenedTimer = 0;
-        this.eatenFlag = false;
-      }
-      getPixelPos(){
-        return { x: this.x * TILE_SIZE, y: this.y * TILE_SIZE };
-      }
+      return cnt;
     }
     
-    // spawn positions (classic)
-    let pacman = { x: 14, y: 23, direction: 'LEFT', nextDir: 'LEFT', mouthOpen: 0, animCounter:0 };
-    let score = 0;
-    let highScore = localStorage.getItem('pacmanHigh') ? parseInt(localStorage.getItem('pacmanHigh')) : 2610;
-    let gameActive = true;
-    let ghostModeGlobal = 'scatter'; // 'scatter' or 'chase'
-    let modeTimer = 0;
-    let frightenedEndTime = 0;
-    let respawnTimer = 0;
-    let powerModeActive = false;
-    
-    // ghosts creation: Blinky(red), Pinky(pink), Inky(cyan), Clyde(orange)
-    let ghosts = [
-      new Ghost('Blinky', '#ff5c5c', 13, 14),   // red
-      new Ghost('Pinky', '#ffb8de', 13, 17),    // pink
-      new Ghost('Inky', '#6bd7ff', 11, 17),     // cyan
-      new Ghost('Clyde', '#ffb347', 15, 17)     // orange
-    ];
-    
-    // helper: check if tile walkable for pacman/ghosts (exclude ghost house door? but door is passable for ghosts)
-    function isWalkable(col, row, forGhost=true){
-      if(col<0 || col>=COLS || row<0 || row>=ROWS) return false;
-      let cell = mazeLayout[row][col];
-      if(cell === 0) return false; // wall
-      // ghost door tile (value 4) is walkable for ghosts and pacman? In classic pacman can pass through? Actually ghost door is only for ghosts but pacman cannot go inside. To mimic, we block pacman from entering 4 tiles.
-      if(cell === 4 && !forGhost) return false;
-      return true;
-    }
-    
-    // Direction vectors
-    const dirs = {
-      'UP':    { dx:0, dy:-1 },
-      'DOWN':  { dx:0, dy:1 },
-      'LEFT':  { dx:-1, dy:0 },
-      'RIGHT': { dx:1, dy:0 }
-    };
-    const opposites = { 'UP':'DOWN','DOWN':'UP','LEFT':'RIGHT','RIGHT':'LEFT' };
-    
-    // move character (pacman or ghost)
-    function tryMove(entity, direction, isPacman){
-      let newCol = entity.x + dirs[direction].dx;
-      let newRow = entity.y + dirs[direction].dy;
-      let walkable = isWalkable(newCol, newRow, !isPacman);
-      if(walkable){
-        entity.x = newCol;
-        entity.y = newRow;
+    // eat pellet / power pellet
+    function eatPellet(col, row) {
+      if(grid[row][col] === 2) {
+        score += 10;
+        grid[row][col] = 0;
+        document.getElementById('scoreValue').innerText = score;
+        return true;
+      } else if(grid[row][col] === 3) {
+        score += 50;
+        grid[row][col] = 0;
+        document.getElementById('scoreValue').innerText = score;
+        activatePowerMode();
         return true;
       }
       return false;
     }
     
-    // Pacman animation & pellet eating
-    function updatePacman(){
-      if(!gameActive) return;
-      // try next direction first
-      if(pacman.nextDir && tryMove(pacman, pacman.nextDir, true)){
-        pacman.direction = pacman.nextDir;
-        pacman.nextDir = null;
-      } else if(!tryMove(pacman, pacman.direction, true)){
-        // stuck, but we keep direction
-      }
-      // eat pellet
-      let row = pacman.y, col = pacman.x;
-      if(pellets[row][col]){
-        pellets[row][col] = false;
-        let isPower = powerPellets[row][col];
-        if(isPower){
-          score += 50;
-          activatePowerMode();
-          powerPellets[row][col] = false;
-        } else {
-          score += 10;
-        }
-        updateScoreUI();
-        totalPellets--;
-        if(totalPellets === 0){
-          gameActive = false;
-          document.getElementById('statusMsg').innerText = '✨ YOU WIN! ✨';
-        }
-      }
-      
-      // mouth animation
-      pacman.animCounter = (pacman.animCounter + 1) % 16;
-      pacman.mouthOpen = (pacman.animCounter < 8) ? 0.55 : 0.2;
+    function activatePowerMode() {
+      powerMode = true;
+      powerTimer = 350; // frames ~ 7 seconds at 50fps? We'll use 50fps timer? Actually update with frame rate ~ 60fps -> 6 sec approx
+      document.getElementById('powerModeIndicator').innerText = 'ACTIVE ⚡';
+      // ghosts become scared
+      ghosts.forEach(g => { g.mode = 'scared'; });
     }
     
-    function activatePowerMode(){
-      if(powerModeActive) return;
-      powerModeActive = true;
-      for(let g of ghosts){
-        if(!g.eatenFlag){
-          g.mode = 'frightened';
-          g.frightenedTimer = 400; // frames ~6 seconds at 60fps? we use requestAnimationFrame ~60fps, set 350 frames
+    function updatePowerMode() {
+      if(powerMode) {
+        powerTimer--;
+        if(powerTimer <= 0) {
+          powerMode = false;
+          powerTimer = 0;
+          document.getElementById('powerModeIndicator').innerText = 'OFF';
+          ghosts.forEach(g => { if(g.mode === 'scared') g.mode = 'chase'; });
         }
-      }
-      setTimeout(()=>{ 
-        if(powerModeActive){
-          for(let g of ghosts){
-            if(g.mode === 'frightened') g.mode = (ghostModeGlobal === 'scatter' ? 'scatter' : 'chase');
-          }
-          powerModeActive = false;
-        }
-      }, 6000);
-    }
-    
-    // ghost AI target tile based on mode
-    function getGhostTarget(ghost, pacmanPos){
-      if(ghost.mode === 'frightened') return null; // random move handled separate
-      if(ghost.mode === 'scatter'){
-        // scatter targets corners
-        if(ghost.name === 'Blinky') return {x:COLS-2, y:0};
-        if(ghost.name === 'Pinky') return {x:2, y:0};
-        if(ghost.name === 'Inky') return {x:COLS-2, y:ROWS-1};
-        return {x:0, y:ROWS-1}; // clyde
-      }
-      // chase mode individual logic
-      if(ghost.name === 'Blinky'){
-        return {x:pacmanPos.x, y:pacmanPos.y};
-      } else if(ghost.name === 'Pinky'){
-        let ahead = {...pacmanPos};
-        let steps = 4;
-        switch(pacman.direction){
-          case 'UP': ahead.y -= steps; break;
-          case 'DOWN': ahead.y += steps; break;
-          case 'LEFT': ahead.x -= steps; break;
-          case 'RIGHT': ahead.x += steps; break;
-        }
-        return ahead;
-      } else if(ghost.name === 'Inky'){
-        let twoAhead = {...pacmanPos};
-        let steps = 2;
-        switch(pacman.direction){
-          case 'UP': twoAhead.y -= steps; break;
-          case 'DOWN': twoAhead.y += steps; break;
-          case 'LEFT': twoAhead.x -= steps; break;
-          case 'RIGHT': twoAhead.x += steps; break;
-        }
-        let blinky = ghosts[0];
-        let vecX = twoAhead.x - blinky.x;
-        let vecY = twoAhead.y - blinky.y;
-        return {x: twoAhead.x + vecX, y: twoAhead.y + vecY};
-      } else { // clyde
-        let distToPac = Math.hypot(ghost.x - pacmanPos.x, ghost.y - pacmanPos.y);
-        if(distToPac > 8) return {x:pacmanPos.x, y:pacmanPos.y};
-        else return {x:0, y:ROWS-1};
       }
     }
     
-    function moveGhost(ghost){
-      if(!gameActive) return;
-      if(ghost.mode === 'frightened'){
-        if(ghost.frightenedTimer <= 0){
-          ghost.mode = ghostModeGlobal;
-          ghost.frightenedTimer = 0;
-        } else {
-          ghost.frightenedTimer--;
-        }
-      }
-      // find best direction (simple BFS or shortest path heuristic)
-      let possibleDirs = [];
-      for(let d in dirs){
-        let nx = ghost.x + dirs[d].dx;
-        let ny = ghost.y + dirs[d].dy;
-        if(isWalkable(nx, ny, true)) possibleDirs.push(d);
-      }
-      if(possibleDirs.length === 0) return;
-      let target = getGhostTarget(ghost, {x:pacman.x, y:pacman.y});
-      let bestDir = null;
-      let bestDist = Infinity;
-      if(ghost.mode === 'frightened'){
-        let rand = Math.floor(Math.random() * possibleDirs.length);
-        bestDir = possibleDirs[rand];
+    // move pacman based on direction, check collisions
+    function tryMovePacman() {
+      let newX = pacman.x, newY = pacman.y;
+      let newDir = pacman.nextDir;
+      let dx=0, dy=0;
+      if(newDir === 'right') dx=1;
+      else if(newDir === 'left') dx=-1;
+      else if(newDir === 'up') dy=-1;
+      else if(newDir === 'down') dy=1;
+      let checkX = pacman.x + dx;
+      let checkY = pacman.y + dy;
+      if(checkX>=0 && checkX<COLS && checkY>=0 && checkY<ROWS && grid[checkY][checkX] !== 1) {
+        pacman.x = checkX;
+        pacman.y = checkY;
+        pacman.dir = newDir;
+        eatPellet(pacman.x, pacman.y);
       } else {
-        for(let d of possibleDirs){
-          let nx = ghost.x + dirs[d].dx;
-          let ny = ghost.y + dirs[d].dy;
-          let dist = Math.hypot(nx - target.x, ny - target.y);
-          if(dist < bestDist){
+        // try old direction
+        let odx=0, ody=0;
+        if(pacman.dir === 'right') odx=1;
+        else if(pacman.dir === 'left') odx=-1;
+        else if(pacman.dir === 'up') ody=-1;
+        else if(pacman.dir === 'down') ody=1;
+        let oldX = pacman.x + odx;
+        let oldY = pacman.y + ody;
+        if(oldX>=0 && oldX<COLS && oldY>=0 && oldY<ROWS && grid[oldY][oldX] !== 1) {
+          pacman.x = oldX;
+          pacman.y = oldY;
+          eatPellet(pacman.x, pacman.y);
+        }
+      }
+    }
+    
+    // simple ghost movement (avoid walls, semi random chase)
+    function moveGhost(ghost) {
+      const dirs = [{dx:0, dy:-1, name:'up'},{dx:0, dy:1, name:'down'},{dx:-1, dy:0, name:'left'},{dx:1, dy:0, name:'right'}];
+      let possible = [];
+      for(let d of dirs) {
+        let nx = ghost.x + d.dx;
+        let ny = ghost.y + d.dy;
+        if(nx>=0 && nx<COLS && ny>=0 && ny<ROWS && grid[ny][nx] !== 1) {
+          possible.push(d);
+        }
+      }
+      if(possible.length === 0) return;
+      let chosen = possible[Math.floor(Math.random() * possible.length)];
+      if(ghost.mode === 'scared') {
+        // random movement is fine
+        ghost.x += chosen.dx;
+        ghost.y += chosen.dy;
+      } else {
+        // simple chase: move towards pacman (prefer direction that reduces distance)
+        let best = possible[0];
+        let bestDist = Math.hypot((ghost.x+best.dx)-pacman.x, (ghost.y+best.dy)-pacman.y);
+        for(let d of possible) {
+          let ndx = ghost.x + d.dx;
+          let ndy = ghost.y + d.dy;
+          let dist = Math.hypot(ndx-pacman.x, ndy-pacman.y);
+          if(dist < bestDist) {
             bestDist = dist;
-            bestDir = d;
+            best = d;
           }
         }
-      }
-      if(bestDir) tryMove(ghost, bestDir, false);
-      
-      // collision after move
-      if(Math.abs(ghost.x - pacman.x) <= 0.8 && Math.abs(ghost.y - pacman.y) <= 0.8){
-        if(ghost.mode === 'frightened'){
-          // eat ghost
-          score += 200;
-          updateScoreUI();
-          ghost.mode = 'scatter';
-          ghost.eatenFlag = true;
-          ghost.x = 13; ghost.y = 14; // respawn ghost
-          setTimeout(()=>{ ghost.eatenFlag = false; }, 2000);
-        } else if(gameActive){
-          gameActive = false;
-          document.getElementById('statusMsg').innerText = '💀 GAME OVER 💀';
-        }
+        ghost.x += best.dx;
+        ghost.y += best.dy;
       }
     }
     
-    function updateGhosts(){
-      for(let g of ghosts) moveGhost(g);
-    }
-    
-    // global mode switching (scatter / chase)
-    let globalTimer = 0;
-    function updateGameMode(){
-      if(!gameActive) return;
-      globalTimer++;
-      if(globalTimer % 420 === 0){ // switch every 7 sec approx
-        ghostModeGlobal = (ghostModeGlobal === 'scatter') ? 'chase' : 'scatter';
-        for(let g of ghosts){
-          if(g.mode !== 'frightened') g.mode = ghostModeGlobal;
-        }
-      }
-    }
-    
-    function updateScoreUI(){
-      document.getElementById('scoreDisplay').innerText = score;
-      if(score > highScore){
-        highScore = score;
-        localStorage.setItem('pacmanHigh', highScore);
-        document.getElementById('highScoreDisplay').innerText = highScore;
-      }
-    }
-    
-    // reset game fully
-    function resetGame(){
-      gameActive = true;
-      score = 0;
-      updateScoreUI();
-      document.getElementById('statusMsg').innerText = '⚡ PLAY!';
-      initMazeEntities();
-      pacman = { x: 14, y: 23, direction: 'LEFT', nextDir: null, mouthOpen: 0, animCounter:0 };
-      ghosts = [
-        new Ghost('Blinky', '#ff5c5c', 13, 14),
-        new Ghost('Pinky', '#ffb8de', 13, 17),
-        new Ghost('Inky', '#6bd7ff', 11, 17),
-        new Ghost('Clyde', '#ffb347', 15, 17)
-      ];
-      ghostModeGlobal = 'scatter';
-      globalTimer = 0;
-      powerModeActive = false;
-      for(let g of ghosts) g.mode = 'scatter';
-    }
-    
-    // Drawing function
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    function drawMaze(){
-      for(let row=0;row<ROWS;row++){
-        for(let col=0;col<COLS;col++){
-          let cell = mazeLayout[row][col];
-          let x = col*TILE_SIZE, y = row*TILE_SIZE;
-          if(cell === 0){
-            ctx.fillStyle = '#0a1c3a';
-            ctx.fillRect(x,y,TILE_SIZE-0.5,TILE_SIZE-0.5);
-            ctx.fillStyle = '#152c54';
-            ctx.fillRect(x+2,y+2,TILE_SIZE-4,TILE_SIZE-4);
+    function handleCollisions() {
+      for(let i=0;i<ghosts.length;i++) {
+        const g = ghosts[i];
+        if(g.x === pacman.x && g.y === pacman.y) {
+          if(powerMode && g.mode === 'scared') {
+            // eat ghost!
+            score += 200;
+            document.getElementById('scoreValue').innerText = score;
+            // respawn ghost at start position
+            if(g.name === 'blinky') { g.x=9; g.y=6; }
+            else if(g.name === 'pinky') { g.x=10; g.y=6; }
+            else if(g.name === 'inky') { g.x=9; g.y=7; }
+            else { g.x=10; g.y=7; }
+            g.mode = 'chase';
           } else {
-            ctx.fillStyle = '#000000';
-            ctx.fillRect(x,y,TILE_SIZE,TILE_SIZE);
-            if(pellets[row][col] && !powerPellets[row][col]){
-              ctx.fillStyle = '#f8f8e0';
-              ctx.beginPath();
-              ctx.arc(x+TILE_SIZE/2, y+TILE_SIZE/2, 2.5, 0, Math.PI*2);
-              ctx.fill();
-            } else if(powerPellets[row][col] && pellets[row][col]){
-              ctx.fillStyle = '#ffaa88';
-              ctx.beginPath();
-              ctx.arc(x+TILE_SIZE/2, y+TILE_SIZE/2, 7, 0, Math.PI*2);
-              ctx.fill();
-              ctx.fillStyle = '#ffdd99';
-              ctx.beginPath();
-              ctx.arc(x+TILE_SIZE/2, y+TILE_SIZE/2, 4, 0, Math.PI*2);
-              ctx.fill();
+            // lose life
+            lives--;
+            document.getElementById('livesValue').innerText = lives;
+            if(lives <= 0) {
+              gameActive = false;
+              alert("GAME OVER! Press RESET to try again.");
+              if(gameLoopId) cancelAnimationFrame(gameLoopId);
+              gameLoopId = null;
+              return;
+            } else {
+              // respawn pacman and ghosts to initial positions
+              resetPositions();
             }
           }
         }
       }
     }
     
-    function drawPacman(){
-      let x = pacman.x * TILE_SIZE, y = pacman.y * TILE_SIZE;
-      let angleStart = 0, angleEnd = 0;
-      let angle = pacman.mouthOpen * Math.PI;
-      switch(pacman.direction){
-        case 'RIGHT': angleStart = angle; angleEnd = 2*Math.PI - angle; break;
-        case 'LEFT': angleStart = Math.PI + angle; angleEnd = Math.PI - angle; break;
-        case 'UP': angleStart = -Math.PI/2 + angle; angleEnd = Math.PI/2 - angle; break;
-        case 'DOWN': angleStart = Math.PI/2 + angle; angleEnd = 3*Math.PI/2 - angle; break;
+    function resetPositions() {
+      pacman.x = 1; pacman.y = 1; pacman.dir = 'right'; pacman.nextDir = 'right';
+      ghosts[0] = { x: 9, y: 6, color: '#FF5E6E', name: 'blinky', mode: 'chase', dir: 'left' };
+      ghosts[1] = { x: 10, y: 6, color: '#FFB7C5', name: 'pinky', mode: 'chase', dir: 'right' };
+      ghosts[2] = { x: 9, y: 7, color: '#6AD4FF', name: 'inky', mode: 'chase', dir: 'up' };
+      ghosts[3] = { x: 10, y: 7, color: '#FFB347', name: 'clyde', mode: 'chase', dir: 'down' };
+      if(powerMode) {
+        powerMode = false;
+        powerTimer=0;
+        document.getElementById('powerModeIndicator').innerText = 'OFF';
+        ghosts.forEach(g=>{ if(g.mode==='scared') g.mode='chase';});
       }
-      ctx.fillStyle = '#ffff33';
-      ctx.beginPath();
-      ctx.arc(x+TILE_SIZE/2, y+TILE_SIZE/2, TILE_SIZE/2-2, angleStart, angleEnd);
-      ctx.lineTo(x+TILE_SIZE/2, y+TILE_SIZE/2);
-      ctx.fill();
-      ctx.fillStyle = '#000';
-      ctx.beginPath();
-      ctx.arc(x+TILE_SIZE/2-3, y+TILE_SIZE/2-3, 2, 0, Math.PI*2);
-      ctx.fill();
     }
     
-    function drawGhosts(){
-      for(let g of ghosts){
-        let x = g.x * TILE_SIZE, y = g.y * TILE_SIZE;
-        let ghostColor = g.color;
-        if(g.mode === 'frightened') ghostColor = '#88aaff';
+    function fullResetGame() {
+      score = 0;
+      lives = 3;
+      powerMode = false;
+      powerTimer = 0;
+      gameActive = true;
+      document.getElementById('scoreValue').innerText = '0';
+      document.getElementById('livesValue').innerText = '3';
+      document.getElementById('powerModeIndicator').innerText = 'OFF';
+      // reset grid from rawMaze
+      for(let i=0;i<ROWS;i++) {
+        for(let j=0;j<COLS;j++) {
+          grid[i][j] = rawMaze[i][j];
+        }
+      }
+      resetPositions();
+      if(gameLoopId) cancelAnimationFrame(gameLoopId);
+      gameLoopId = requestAnimationFrame(gameUpdate);
+    }
+    
+    // drawing engine
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // draw maze
+      for(let row=0;row<ROWS;row++) {
+        for(let col=0;col<COLS;col++) {
+          let cell = grid[row][col];
+          if(cell === 1) {
+            ctx.fillStyle = "#191e3a";
+            ctx.fillRect(col*CELL_SIZE, row*CELL_SIZE, CELL_SIZE-0.5, CELL_SIZE-0.5);
+            ctx.fillStyle = "#2a2f55";
+            ctx.fillRect(col*CELL_SIZE+2, row*CELL_SIZE+2, CELL_SIZE-4, CELL_SIZE-4);
+          } else if(cell === 2) {
+            ctx.fillStyle = "#F9E0A0";
+            ctx.beginPath();
+            ctx.arc(col*CELL_SIZE+CELL_SIZE/2, row*CELL_SIZE+CELL_SIZE/2, 4, 0, Math.PI*2);
+            ctx.fill();
+          } else if(cell === 3) {
+            ctx.fillStyle = "#FFBB88";
+            ctx.beginPath();
+            ctx.arc(col*CELL_SIZE+CELL_SIZE/2, row*CELL_SIZE+CELL_SIZE/2, 10, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(col*CELL_SIZE+CELL_SIZE/2, row*CELL_SIZE+CELL_SIZE/2, 4, 0, Math.PI*2);
+            ctx.fill();
+          }
+        }
+      }
+      // draw ghosts
+      ghosts.forEach(g => {
+        let ghostColor = g.mode === 'scared' ? '#5D3FD8' : g.color;
         ctx.fillStyle = ghostColor;
+        ctx.shadowBlur = 0;
         ctx.beginPath();
-        ctx.ellipse(x+TILE_SIZE/2, y+TILE_SIZE/2-2, 8, 8, 0, 0, Math.PI*2);
+        ctx.arc(g.x*CELL_SIZE+CELL_SIZE/2, g.y*CELL_SIZE+CELL_SIZE/2, 11, 0, Math.PI*2);
         ctx.fill();
-        ctx.fillRect(x+4, y+8, 12, 6);
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = "white";
         ctx.beginPath();
-        ctx.arc(x+6, y+5, 2, 0, Math.PI*2);
-        ctx.arc(x+14, y+5, 2, 0, Math.PI*2);
+        ctx.arc(g.x*CELL_SIZE+8, g.y*CELL_SIZE+10, 3, 0, Math.PI*2);
+        ctx.arc(g.x*CELL_SIZE+20, g.y*CELL_SIZE+10, 3, 0, Math.PI*2);
         ctx.fill();
-        ctx.fillStyle = '#003366';
+        ctx.fillStyle = "#010101";
         ctx.beginPath();
-        ctx.arc(x+6, y+5, 1, 0, Math.PI*2);
-        ctx.arc(x+14, y+5, 1, 0, Math.PI*2);
+        ctx.arc(g.x*CELL_SIZE+7, g.y*CELL_SIZE+9, 1.5, 0, Math.PI*2);
+        ctx.arc(g.x*CELL_SIZE+19, g.y*CELL_SIZE+9, 1.5, 0, Math.PI*2);
         ctx.fill();
-      }
+      });
+      // draw Pac-Man
+      let angle = pacman.dir === 'right' ? 0 : pacman.dir === 'left' ? Math.PI : pacman.dir === 'up' ? -Math.PI/2 : Math.PI/2;
+      ctx.fillStyle = "#FFE45C";
+      ctx.beginPath();
+      ctx.arc(pacman.x*CELL_SIZE+CELL_SIZE/2, pacman.y*CELL_SIZE+CELL_SIZE/2, 12, angle+0.3, angle+2*Math.PI-0.3);
+      ctx.lineTo(pacman.x*CELL_SIZE+CELL_SIZE/2, pacman.y*CELL_SIZE+CELL_SIZE/2);
+      ctx.fill();
+      ctx.fillStyle = "#3A2810";
+      ctx.beginPath();
+      ctx.arc(pacman.x*CELL_SIZE+18, pacman.y*CELL_SIZE+12, 2, 0, Math.PI*2);
+      ctx.fill();
     }
     
-    function animate(){
-      if(gameActive){
-        updatePacman();
-        updateGhosts();
-        updateGameMode();
+    function gameUpdate() {
+      if(!gameActive) {
+        draw();
+        requestAnimationFrame(gameUpdate);
+        return;
       }
-      drawMaze();
-      drawPacman();
-      drawGhosts();
-      requestAnimationFrame(animate);
+      tryMovePacman();
+      for(let g of ghosts) moveGhost(g);
+      updatePowerMode();
+      handleCollisions();
+      if(countDotsLeft() === 0) {
+        alert("✨ LEVEL CLEAR! YOU WIN! ✨ Press RESET to play again.");
+        gameActive = false;
+      }
+      draw();
+      gameLoopId = requestAnimationFrame(gameUpdate);
     }
     
-    // input handling
-    function setDirection(dir){
+    // keyboard & button controls
+    function setDirection(dir) {
       if(!gameActive) return;
-      let nextTile = {x:pacman.x + dirs[dir].dx, y:pacman.y + dirs[dir].dy};
-      if(isWalkable(nextTile.x, nextTile.y, true)){
-        pacman.nextDir = dir;
-      } else {
-        pacman.nextDir = dir;
-      }
+      pacman.nextDir = dir;
     }
-    
-    window.addEventListener('keydown', (e)=>{
-      let key = e.key;
-      if(key === 'ArrowUp') setDirection('UP');
-      else if(key === 'ArrowDown') setDirection('DOWN');
-      else if(key === 'ArrowLeft') setDirection('LEFT');
-      else if(key === 'ArrowRight') setDirection('RIGHT');
-      else if(key === 'w' || key === 'W') setDirection('UP');
-      else if(key === 's' || key === 'S') setDirection('DOWN');
-      else if(key === 'a' || key === 'A') setDirection('LEFT');
-      else if(key === 'd' || key === 'D') setDirection('RIGHT');
-      if(e.key === 'r' || e.key === 'R') resetGame();
+    window.addEventListener('keydown', (e) => {
+      if(e.key === 'ArrowUp') setDirection('up');
+      else if(e.key === 'ArrowDown') setDirection('down');
+      else if(e.key === 'ArrowLeft') setDirection('left');
+      else if(e.key === 'ArrowRight') setDirection('right');
+      e.preventDefault();
     });
-    document.getElementById('upBtn').onclick = ()=>setDirection('UP');
-    document.getElementById('downBtn').onclick = ()=>setDirection('DOWN');
-    document.getElementById('leftBtn').onclick = ()=>setDirection('LEFT');
-    document.getElementById('rightBtn').onclick = ()=>setDirection('RIGHT');
-    document.getElementById('resetBtn').onclick = ()=>resetGame();
+    document.getElementById('btnUp').onclick = ()=>setDirection('up');
+    document.getElementById('btnDown').onclick = ()=>setDirection('down');
+    document.getElementById('btnLeft').onclick = ()=>setDirection('left');
+    document.getElementById('btnRight').onclick = ()=>setDirection('right');
+    document.getElementById('btnReset').onclick = ()=>{ fullResetGame(); };
     
-    document.getElementById('highScoreDisplay').innerText = highScore;
-    resetGame();
-    animate();
+    fullResetGame();
   })();
 </script>
 </body>
