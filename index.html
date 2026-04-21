@@ -2,124 +2,165 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Pac-Man Ultimate Wiki</title>
+<title>Pac-Man Game</title>
+
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: black;
-        color: white;
-        text-align: center;
-    }
+body {
+    background: black;
+    color: white;
+    text-align: center;
+    font-family: Arial;
+}
 
-    h1 {
-        color: yellow;
-        font-size: 60px;
-        margin-top: 20px;
-    }
-
-    h2 {
-        color: pink;
-        margin-top: -10px;
-    }
-
-    .section {
-        margin: 30px auto;
-        width: 80%;
-        background: rgba(255,255,255,0.1);
-        padding: 20px;
-        border-radius: 15px;
-    }
-
-    .btn {
-        display: inline-block;
-        background: gray;
-        color: white;
-        padding: 10px 20px;
-        margin: 10px;
-        border-radius: 20px;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .grid {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-    }
-
-    .card {
-        width: 45%;
-        background: rgba(255,255,255,0.1);
-        padding: 15px;
-        border-radius: 10px;
-        margin: 10px;
-    }
-
-    img {
-        width: 200px;
-        border-radius: 10px;
-    }
-
-    .play-btn {
-        margin-top: 20px;
-        padding: 15px 40px;
-        font-size: 20px;
-        border-radius: 10px;
-        border: none;
-        background: white;
-        cursor: pointer;
-    }
+canvas {
+    background: black;
+    display: block;
+    margin: 20px auto;
+    border: 3px solid blue;
+    box-shadow: 0 0 20px blue;
+}
 </style>
 </head>
 
 <body>
 
-<h1>PAC-MAN</h1>
-<h2>Ultimate Wiki</h2>
+<h1>Pac-Man Game</h1>
+<p>Use arrow keys to move</p>
+<p id="score">Score: 0</p>
 
-<a href="#history" class="btn">How it all started</a>
-<a href="#characters" class="btn">Characters</a>
+<canvas id="game" width="400" height="400"></canvas>
 
-<div id="history" class="section">
-    <h3>Creator</h3>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Toru_Iwatani.jpg" alt="Toru Iwatani">
-    <p>
-        Toru Iwatani is a Japanese video game designer best known as the creator of Pac-Man.
-        He created the game in 1980 to make something fun and accessible, unlike violent arcade games.
-    </p>
-</div>
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-<div class="grid">
-    <div class="card">
-        <h3>Pac-Man</h3>
-        <p>
-            Pac-Man is a yellow circular character who eats dots in a maze while avoiding ghosts.
-            The player controls his movement to survive and score points.
-        </p>
-    </div>
+const tileSize = 20;
+const rows = 20;
+const cols = 20;
 
-    <div class="card">
-        <h3>Ghosts</h3>
-        <p>
-            The ghosts (Blinky, Pinky, Inky, Clyde) chase Pac-Man.
-            Each has a unique behavior. Power pellets allow Pac-Man to eat them temporarily.
-        </p>
-    </div>
-</div>
+let score = 0;
 
-<div class="section">
-    <h2>Free Gameplay</h2>
-    <iframe 
-        src="https://www.google.com/logos/2010/pacman10-i.html" 
-        width="600" 
-        height="400"
-        style="border:none;">
-    </iframe>
+// 0 = dot, 1 = wall
+let map = [
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,0,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
 
-    <br>
-    <button class="play-btn">Play</button>
-</div>
+// PLAYER
+let player = {
+    x: 1,
+    y: 1,
+    dx: 0,
+    dy: 0
+};
+
+// GHOST
+let ghost = {
+    x: 18,
+    y: 1
+};
+
+// CONTROLS
+document.addEventListener("keydown", e => {
+    if (e.key === "ArrowUp") { player.dx = 0; player.dy = -1; }
+    if (e.key === "ArrowDown") { player.dx = 0; player.dy = 1; }
+    if (e.key === "ArrowLeft") { player.dx = -1; player.dy = 0; }
+    if (e.key === "ArrowRight") { player.dx = 1; player.dy = 0; }
+});
+
+// UPDATE
+function update() {
+    let nx = player.x + player.dx;
+    let ny = player.y + player.dy;
+
+    if (map[ny][nx] !== 1) {
+        player.x = nx;
+        player.y = ny;
+    }
+
+    // eat dots
+    if (map[player.y][player.x] === 0) {
+        map[player.y][player.x] = -1;
+        score++;
+        document.getElementById("score").innerText = "Score: " + score;
+    }
+
+    // ghost simple chase
+    if (ghost.x < player.x) ghost.x++;
+    else if (ghost.x > player.x) ghost.x--;
+
+    if (ghost.y < player.y) ghost.y++;
+    else if (ghost.y > player.y) ghost.y--;
+
+    // collision
+    if (ghost.x === player.x && ghost.y === player.y) {
+        alert("Game Over!");
+        location.reload();
+    }
+
+    // win
+    if (score > 150) {
+        alert("You Win!");
+        location.reload();
+    }
+}
+
+// DRAW
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+
+            if (map[y][x] === 1) {
+                ctx.fillStyle = "blue";
+                ctx.fillRect(x*tileSize, y*tileSize, tileSize, tileSize);
+            }
+
+            if (map[y][x] === 0) {
+                ctx.fillStyle = "white";
+                ctx.beginPath();
+                ctx.arc(x*tileSize+10, y*tileSize+10, 3, 0, Math.PI*2);
+                ctx.fill();
+            }
+        }
+    }
+
+    // player
+    ctx.fillStyle = "yellow";
+    ctx.beginPath();
+    ctx.arc(player.x*tileSize+10, player.y*tileSize+10, 8, 0.2*Math.PI, 1.8*Math.PI);
+    ctx.lineTo(player.x*tileSize+10, player.y*tileSize+10);
+    ctx.fill();
+
+    // ghost
+    ctx.fillStyle = "red";
+    ctx.fillRect(ghost.x*tileSize, ghost.y*tileSize, 20, 20);
+}
+
+// GAME LOOP
+function loop() {
+    update();
+    draw();
+}
+
+setInterval(loop, 200);
+</script>
 
 </body>
 </html>
