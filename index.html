@@ -1,492 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>PAC-MAN | Ultimate Wiki</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none; /* better for arcade feel, but text selectable if needed */
-        }
+<meta charset="UTF-8">
+<title>Pac-Man Ultimate Wiki</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: black;
+        color: white;
+        text-align: center;
+    }
 
-        body {
-            background: radial-gradient(circle at 20% 30%, #000000, #0a0f1e);
-            font-family: 'Courier New', 'Press Start 2P', 'VT323', monospace;
-            color: #ffde7a;
-            padding: 2rem 1.5rem;
-            position: relative;
-            min-height: 100vh;
-        }
+    h1 {
+        color: yellow;
+        font-size: 60px;
+        margin-top: 20px;
+    }
 
-        /* maze-like grid pattern overlay (classic arcade carpet) */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 0, 0, 0.7) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 0, 0, 0.7) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
+    h2 {
+        color: pink;
+        margin-top: -10px;
+    }
 
-        /* main container */
-        .wiki-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(3px);
-            border-radius: 48px;
-            border: 3px solid #ffcc33;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,200,0.3);
-            padding: 2rem 2rem 2.5rem;
-            position: relative;
-            z-index: 2;
-            transition: all 0.2s;
-        }
+    .section {
+        margin: 30px auto;
+        width: 80%;
+        background: rgba(255,255,255,0.1);
+        padding: 20px;
+        border-radius: 15px;
+    }
 
-        /* header area with PAC-MAN logo style */
-        .title-section {
-            text-align: center;
-            margin-bottom: 2rem;
-            border-bottom: 3px dashed #ffb347;
-            padding-bottom: 1rem;
-        }
+    .btn {
+        display: inline-block;
+        background: gray;
+        color: white;
+        padding: 10px 20px;
+        margin: 10px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+    }
 
-        h1 {
-            font-size: 5rem;
-            font-weight: bold;
-            letter-spacing: 6px;
-            text-shadow: 6px 6px 0 #0044aa, 3px 3px 0 #ff9900;
-            background: linear-gradient(135deg, #ffff88, #ffcc33);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-            word-break: keep-all;
-        }
+    .grid {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
 
-        .sub {
-            font-family: monospace;
-            font-size: 1.2rem;
-            background: #000000aa;
-            display: inline-block;
-            padding: 0.3rem 1.2rem;
-            border-radius: 60px;
-            letter-spacing: 2px;
-            color: #ffdd77;
-            backdrop-filter: blur(4px);
-        }
+    .card {
+        width: 45%;
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        border-radius: 10px;
+        margin: 10px;
+    }
 
-        /* two column layout for intro + creator */
-        .how-started {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-bottom: 3rem;
-            background: #11131fcc;
-            border-radius: 36px;
-            padding: 1.8rem;
-            border: 1px solid #ffcc66;
-        }
+    img {
+        width: 200px;
+        border-radius: 10px;
+    }
 
-        .story-text {
-            flex: 2;
-            min-width: 240px;
-        }
-
-        .story-text h2 {
-            font-size: 2rem;
-            color: #ffcc77;
-            border-left: 8px solid #ffaa22;
-            padding-left: 20px;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-
-        .story-text p {
-            font-size: 1.1rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-            color: #f0e6b2;
-            font-weight: 500;
-            background: rgba(0,0,0,0.4);
-            padding: 0.5rem;
-            border-radius: 20px;
-        }
-
-        .creator-card {
-            flex: 1;
-            background: #0b0e1a;
-            border-radius: 32px;
-            text-align: center;
-            padding: 1rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            border: 2px solid #ffaa33;
-        }
-
-        .creator-card img {
-            width: 100%;
-            max-width: 200px;
-            border-radius: 50%;
-            border: 4px solid #ffcc44;
-            margin-bottom: 1rem;
-            background: #000;
-            box-shadow: 0 0 0 3px #ffaa33, 0 0 0 6px #1e2a3a;
-        }
-
-        .creator-card h3 {
-            font-size: 1.8rem;
-            color: #ffdd99;
-        }
-
-        .creator-card p {
-            font-size: 0.9rem;
-            color: #bbaa77;
-        }
-
-        /* GAME PLANS + play button area */
-        .game-plans {
-            background: #000000aa;
-            border-radius: 40px;
-            margin: 2rem 0;
-            padding: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.5rem;
-            border: 1px solid #ffcc55;
-        }
-
-        .plan-text {
-            flex: 2;
-        }
-
-        .plan-text h2 {
-            font-size: 2rem;
-            color: #ffffaa;
-        }
-
-        .plan-text p {
-            font-size: 1.05rem;
-            margin-top: 0.5rem;
-        }
-
-        .play-button-area {
-            flex: 1;
-            text-align: center;
-        }
-
-        .play-btn {
-            display: inline-block;
-            background: radial-gradient(circle at 30% 10%, #ffcc44, #e68a00);
-            border: none;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            font-size: 2rem;
-            padding: 1rem 2rem;
-            border-radius: 60px;
-            color: #1f2a0e;
-            text-decoration: none;
-            text-shadow: 1px 1px 0 #ffeeaa;
-            box-shadow: 0 8px 0 #9b5e1a;
-            transition: 0.07s linear;
-            cursor: pointer;
-            letter-spacing: 2px;
-        }
-
-        .play-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 4px 0 #9b5e1a;
-        }
-
-        /* ghosts characters grid */
-        .characters-section {
-            margin-top: 2rem;
-        }
-
-        .characters-section h2 {
-            font-size: 2.3rem;
-            margin-bottom: 1.2rem;
-            background: linear-gradient(90deg, #ffaa44, #ffeedd);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-            border-bottom: 3px solid #ffaa55;
-        }
-
-        .ghost-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1.5rem;
-        }
-
-        .ghost-card {
-            background: #020617cc;
-            backdrop-filter: blur(5px);
-            border-radius: 60px;
-            padding: 1rem 1.5rem;
-            text-align: center;
-            width: 180px;
-            transition: transform 0.2s;
-            border: 2px solid #ffcc88;
-            box-shadow: 0 5px 15px black;
-        }
-
-        .ghost-card:hover {
-            transform: scale(1.03);
-            border-color: #ffff99;
-        }
-
-        .ghost-svg {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .ghost-name {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin: 10px 0 4px;
-        }
-
-        .ghost-desc {
-            font-size: 0.8rem;
-            background: #00000099;
-            border-radius: 20px;
-            padding: 4px 8px;
-        }
-
-        /* footer / fun */
-        .power-pellet-note {
-            margin-top: 3rem;
-            text-align: center;
-            background: #000000aa;
-            border-radius: 50px;
-            padding: 1rem;
-            font-size: 1rem;
-            border-left: 8px solid #ffaa33;
-            border-right: 8px solid #ffaa33;
-        }
-
-        @media (max-width: 750px) {
-            .wiki-container {
-                padding: 1rem;
-            }
-            h1 {
-                font-size: 2.8rem;
-            }
-            .play-btn {
-                font-size: 1.5rem;
-                padding: 0.7rem 1.3rem;
-            }
-            .ghost-card {
-                width: 150px;
-            }
-        }
-
-        /* maze pellets decoration */
-        .pellet {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #f7d44a;
-            border-radius: 50%;
-            opacity: 0.5;
-            pointer-events: none;
-            z-index: 1;
-        }
-    </style>
+    .play-btn {
+        margin-top: 20px;
+        padding: 15px 40px;
+        font-size: 20px;
+        border-radius: 10px;
+        border: none;
+        background: white;
+        cursor: pointer;
+    }
+</style>
 </head>
+
 <body>
 
-<div class="wiki-container">
-    <div class="title-section">
-        <h1>PAC-MAN</h1>
-        <div class="sub">✦ ULTIMATE WIKI ✦</div>
+<h1>PAC-MAN</h1>
+<h2>Ultimate Wiki</h2>
+
+<a href="#history" class="btn">How it all started</a>
+<a href="#characters" class="btn">Characters</a>
+
+<div id="history" class="section">
+    <h3>Creator</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Toru_Iwatani.jpg" alt="Toru Iwatani">
+    <p>
+        Toru Iwatani is a Japanese video game designer best known as the creator of Pac-Man.
+        He created the game in 1980 to make something fun and accessible, unlike violent arcade games.
+    </p>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <h3>Pac-Man</h3>
+        <p>
+            Pac-Man is a yellow circular character who eats dots in a maze while avoiding ghosts.
+            The player controls his movement to survive and score points.
+        </p>
     </div>
 
-    <!-- HOW IT ALL STARTED + CREATOR PICTURE (Toru Iwatani) -->
-    <div class="how-started">
-        <div class="story-text">
-            <h2>⚡ HOW IT ALL STARTED</h2>
-            <p><strong>TORU IWATANI</strong> is a <strong>Japanese video game designer</strong> best known as the creator of PAC-MAN, one of the most iconic arcade games ever made. He joined NAMCO in the late 1970s and wanted to design a game different from violent "shooting" games popular at the time. Instead of focusing on combat, he aimed for something friendly and accessible to everyone.</p>
-            <p>That idea led to <strong>PAC-MAN</strong>, released in 1980, where players guide a yellow character through a maze eating pellets while avoiding ghosts. Each ghost has unique behavior, but all try to catch PAC-MAN. When PAC-MAN eats a <span style="color:#ffcc77; background:#000; padding:0 6px;">⚡ POWER PELLET ⚡</span>, the ghosts turn blue and can be eaten for a short time!</p>
-            <p>🎮 The maze-chase phenomenon became a worldwide sensation, defining a generation of arcade culture.</p>
-        </div>
-        <div class="creator-card">
-            <!-- Toru Iwatani image (official-like picture / Creative Commons friendly placeholder but actual image of creator) 
-            using a reliable public domain / wikipedia style image URL: from wikimedia commons (Toru Iwatani at Game Developers Conference) -->
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Toru_Iwatani_-_Game_Developers_Conference_2011_-_Day_2_%28cropped%29.jpg/800px-Toru_Iwatani_-_Game_Developers_Conference_2011_-_Day_2_%28cropped%29.jpg" 
-                 alt="Toru Iwatani, creator of Pac-Man"
-                 onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2016/11/23/14/45/pacman-1853402_640.png'; this.style.objectFit='cover';">
-            <h3>👾 Toru Iwatani</h3>
-            <p>Creator of PAC-MAN · Arcade Legend</p>
-            <p style="font-size:0.7rem; margin-top:5px;">"Making a game for everyone, not just hardcore players."</p>
-        </div>
-    </div>
-
-    <!-- GAME PLANS + PLAY redirect (Google Doodle Pac-Man) -->
-    <div class="game-plans">
-        <div class="plan-text">
-            <h2>🟡 GAME PLANS · PAC-MAN</h2>
-            <p>PAC-MAN is a yellow, circle-shaped character with a mouth that opens and closes as he moves. In gameplay, he travels through a maze eating dots while avoiding ghosts. Controlled by the player, he’s always in motion, changing direction to navigate and survive. Eat power pellets to turn the tables on Blinky, Pinky, Inky & Clyde!</p>
-        </div>
-        <div class="play-button-area">
-            <!-- Redirects to Google Doodle Pac-Man game (official archived version) -->
-            <a href="https://www.google.com/logos/2010/pacman10-i.html" 
-               class="play-btn" 
-               target="_blank" 
-               rel="noopener noreferrer">
-               ▶ PLAY GAME ◀
-            </a>
-            <div style="font-size:0.7rem; margin-top:12px;">✨ Official Google Doodle Pac-Man ✨</div>
-        </div>
-    </div>
-
-    <!-- GHOSTS SECTION with authentic arcade SVG charters like in the game -->
-    <div class="characters-section">
-        <h2>👻 GHOSTS · THE CHASERS</h2>
-        <div class="ghost-grid">
-            <!-- BLINKY (Red) -->
-            <div class="ghost-card">
-                <svg class="ghost-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M25,40 L25,70 L35,65 L45,70 L55,65 L65,70 L75,65 L75,40 C75,28 65,20 50,20 C35,20 25,28 25,40Z" fill="#FF4545" stroke="#AA2E2E" stroke-width="2"/>
-                    <circle cx="38" cy="42" r="6" fill="white"/>
-                    <circle cx="62" cy="42" r="6" fill="white"/>
-                    <circle cx="40" cy="43" r="3" fill="#0B0B2B"/>
-                    <circle cx="64" cy="43" r="3" fill="#0B0B2B"/>
-                    <path d="M47,55 Q50,60 53,55" stroke="#AA2E2E" stroke-width="2.5" fill="none"/>
-                </svg>
-                <div class="ghost-name" style="color:#FF5E5E;">BLINKY</div>
-                <div class="ghost-desc">🔴 Red · Shadow · Direct Chase</div>
-            </div>
-            <!-- PINKY (Pink) -->
-            <div class="ghost-card">
-                <svg class="ghost-svg" viewBox="0 0 100 100" fill="none">
-                    <path d="M25,40 L25,70 L35,65 L45,70 L55,65 L65,70 L75,65 L75,40 C75,28 65,20 50,20 C35,20 25,28 25,40Z" fill="#FFB6DE" stroke="#D96FAF" stroke-width="2"/>
-                    <circle cx="38" cy="42" r="6" fill="white"/>
-                    <circle cx="62" cy="42" r="6" fill="white"/>
-                    <circle cx="40" cy="43" r="3" fill="#0B0B2B"/>
-                    <circle cx="64" cy="43" r="3" fill="#0B0B2B"/>
-                    <path d="M47,55 Q50,60 53,55" stroke="#D96FAF" stroke-width="2.5" fill="none"/>
-                </svg>
-                <div class="ghost-name" style="color:#FF99CC;">PINKY</div>
-                <div class="ghost-desc">🌸 Pink · Ambush / Flanking</div>
-            </div>
-            <!-- INKY (Cyan) -->
-            <div class="ghost-card">
-                <svg class="ghost-svg" viewBox="0 0 100 100" fill="none">
-                    <path d="M25,40 L25,70 L35,65 L45,70 L55,65 L65,70 L75,65 L75,40 C75,28 65,20 50,20 C35,20 25,28 25,40Z" fill="#5AD4FF" stroke="#2F8FB0" stroke-width="2"/>
-                    <circle cx="38" cy="42" r="6" fill="white"/>
-                    <circle cx="62" cy="42" r="6" fill="white"/>
-                    <circle cx="40" cy="43" r="3" fill="#0B0B2B"/>
-                    <circle cx="64" cy="43" r="3" fill="#0B0B2B"/>
-                    <path d="M47,55 Q50,60 53,55" stroke="#2F8FB0" stroke-width="2.5" fill="none"/>
-                </svg>
-                <div class="ghost-name" style="color:#6AD4FF;">INKY</div>
-                <div class="ghost-desc">🌀 Cyan · Bashful (variable pattern)</div>
-            </div>
-            <!-- CLYDE (Orange) -->
-            <div class="ghost-card">
-                <svg class="ghost-svg" viewBox="0 0 100 100" fill="none">
-                    <path d="M25,40 L25,70 L35,65 L45,70 L55,65 L65,70 L75,65 L75,40 C75,28 65,20 50,20 C35,20 25,28 25,40Z" fill="#FFAA4A" stroke="#C2741A" stroke-width="2"/>
-                    <circle cx="38" cy="42" r="6" fill="white"/>
-                    <circle cx="62" cy="42" r="6" fill="white"/>
-                    <circle cx="40" cy="43" r="3" fill="#0B0B2B"/>
-                    <circle cx="64" cy="43" r="3" fill="#0B0B2B"/>
-                    <path d="M47,55 Q50,60 53,55" stroke="#C2741A" stroke-width="2.5" fill="none"/>
-                </svg>
-                <div class="ghost-name" style="color:#FFB347;">CLYDE</div>
-                <div class="ghost-desc">🍊 Orange · Pokey / Scatter random</div>
-            </div>
-        </div>
-        <p style="margin-top:1rem; font-size:0.9rem; text-align:center; background:#00000077; border-radius:30px; padding:6px;">⭐ Each ghost has a unique AI: Blinky directly targets, Pinky ambushes, Inky uses complex triangulation, Clyde switches between chase and scatter! ⭐</p>
-    </div>
-
-    <!-- POWER PELLET & GAME MECHANICS -->
-    <div class="power-pellet-note">
-        🟡 <strong>POWER PELLET MECHANIC</strong> 🟡 — When PAC-MAN eats a Power Pellet, all ghosts turn <span style="color:#7dd3fc;">💙 BLUE 💙</span> and become vulnerable for a few seconds! Eat them for bonus points before they regenerate. Classic arcade terror & triumph.
-    </div>
-
-    <!-- extra tiny arcade credits -->
-    <div style="text-align: center; margin-top: 2rem; font-size: 0.7rem; opacity: 0.8;">
-        🕹️ PAC-MAN™ & © Bandai Namco Entertainment · Wiki tribute | Original game concept by Toru Iwatani
+    <div class="card">
+        <h3>Ghosts</h3>
+        <p>
+            The ghosts (Blinky, Pinky, Inky, Clyde) chase Pac-Man.
+            Each has a unique behavior. Power pellets allow Pac-Man to eat them temporarily.
+        </p>
     </div>
 </div>
 
-<!-- animated floating pellets to simulate background like the game background -->
-<script>
-    (function addMazePellets() {
-        const bodyEl = document.body;
-        const pelletCount = 85;
-        for (let i = 0; i < pelletCount; i++) {
-            const pellet = document.createElement('div');
-            pellet.classList.add('pellet');
-            const leftPos = Math.random() * 100;
-            const topPos = Math.random() * 100;
-            const size = Math.floor(Math.random() * 6) + 4; // 4-9px
-            pellet.style.width = size + 'px';
-            pellet.style.height = size + 'px';
-            pellet.style.left = leftPos + '%';
-            pellet.style.top = topPos + '%';
-            pellet.style.position = 'fixed';
-            pellet.style.opacity = Math.random() * 0.4 + 0.2;
-            pellet.style.backgroundColor = `rgb(255, ${Math.floor(180 + Math.random() * 75)}, 80)`;
-            pellet.style.borderRadius = '50%';
-            pellet.style.pointerEvents = 'none';
-            pellet.style.zIndex = '1';
-            bodyEl.appendChild(pellet);
-        }
-        // also add a few "power pellet" bigger sparkles
-        for (let i = 0; i < 12; i++) {
-            const bigPellet = document.createElement('div');
-            bigPellet.classList.add('pellet');
-            bigPellet.style.width = '14px';
-            bigPellet.style.height = '14px';
-            bigPellet.style.left = Math.random() * 95 + '%';
-            bigPellet.style.top = Math.random() * 95 + '%';
-            bigPellet.style.backgroundColor = '#FFD966';
-            bigPellet.style.boxShadow = '0 0 6px #ffaa44';
-            bigPellet.style.opacity = '0.7';
-            bigPellet.style.position = 'fixed';
-            bodyEl.appendChild(bigPellet);
-        }
-    })();
+<div class="section">
+    <h2>Free Gameplay</h2>
+    <iframe 
+        src="https://www.google.com/logos/2010/pacman10-i.html" 
+        width="600" 
+        height="400"
+        style="border:none;">
+    </iframe>
 
-    // little interactive animation: ghost hover makes them wiggle? not needed but fun extra? not intrusive.
-    const ghostCards = document.querySelectorAll('.ghost-card');
-    ghostCards.forEach(card => {
-        card.addEventListener('mouseenter', (e) => {
-            const svgEl = card.querySelector('.ghost-svg');
-            if(svgEl) {
-                svgEl.style.transform = 'translateY(-3px)';
-                svgEl.style.transition = 'transform 0.2s ease';
-            }
-        });
-        card.addEventListener('mouseleave', (e) => {
-            const svgEl = card.querySelector('.ghost-svg');
-            if(svgEl) svgEl.style.transform = 'translateY(0px)';
-        });
-    });
-</script>
+    <br>
+    <button class="play-btn">Play</button>
+</div>
 
-<!-- ensure the "RACMAN" never appears: title fixed, all references correct, no mistake -->
-<!-- game redirect works to google doodle pacman (classic). Play button opens new tab, respects user -->
-<!-- Background is dark with maze grid, plus pellets scattered for authentic game background look -->
-<!-- Added correct creator image from Wikimedia Commons - Toru Iwatani official photo, if any network issue fallback text -->
-<!-- All ghost SVG shapes crafted to look like classic ghost design with round eyes, mouth etc. -->
 </body>
 </html>
