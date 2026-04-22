@@ -1,198 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Pac-Man Ultimate Wiki</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>PAC-MAN · Ultimate Wiki</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<!-- Pixel Font -->
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    body {
+      background: linear-gradient(145deg, #0b0f1c 0%, #101624 100%);
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Poppins', 'Roboto', sans-serif;
+      color: #f0f3fa;
+      line-height: 1.5;
+      padding: 2rem 1.5rem;
+    }
 
-<style>
-body {
-    margin: 0;
-    background: black;
-    font-family: 'Press Start 2P', cursive;
-    color: white;
-    text-align: center;
-}
+    /* main container */
+    .wiki-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: rgba(10, 14, 23, 0.75);
+      backdrop-filter: blur(2px);
+      border-radius: 3rem;
+      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      border: 1px solid rgba(255, 210, 90, 0.25);
+    }
 
-/* TITLE */
-.title {
-    font-size: 60px;
-    color: yellow;
-    text-shadow: 0 0 20px yellow;
-    margin-top: 30px;
-}
+    /* header / title section */
+    .wiki-header {
+      background: radial-gradient(ellipse at 20% 30%, #ffcd4a, #d48f2b);
+      padding: 2rem 2rem 1.8rem;
+      text-align: center;
+      border-bottom: 3px solid #ffea9e;
+      position: relative;
+    }
 
-.subtitle {
-    background: white;
-    color: hotpink;
-    display: inline-block;
-    padding: 10px 20px;
-    border-radius: 20px;
-    margin-top: 10px;
-}
+    .wiki-header h1 {
+      font-size: 4.2rem;
+      letter-spacing: 6px;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #2c1a0c, #000000);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
+      margin-bottom: 0.25rem;
+    }
 
-/* PACMAN HEADER */
-.header {
-    margin-top: 30px;
-}
+    .sub {
+      font-size: 1.2rem;
+      font-weight: 500;
+      background: #1e1a2faa;
+      display: inline-block;
+      padding: 0.25rem 1.2rem;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      color: #fff1cf;
+      letter-spacing: 1px;
+    }
 
-.pacman {
-    font-size: 50px;
-    color: yellow;
-    animation: chomp 0.5s infinite alternate;
-}
+    /* content grid */
+    .wiki-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding: 2rem 2rem 2.5rem;
+    }
 
-@keyframes chomp {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(20deg); }
-}
+    /* card style */
+    .card {
+      background: rgba(18, 23, 35, 0.85);
+      backdrop-filter: blur(4px);
+      border-radius: 2rem;
+      border: 1px solid rgba(255, 200, 100, 0.3);
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-/* BUTTONS */
-.btn {
-    display: block;
-    width: 300px;
-    margin: 15px auto;
-    padding: 15px;
-    background: #555;
-    border-radius: 30px;
-    text-decoration: none;
-    color: white;
-}
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.5);
+      border-color: #ffc857;
+    }
 
-/* SECTION BOX */
-.box {
-    width: 80%;
-    margin: 30px auto;
-    background: rgba(0,0,0,0.7);
-    border: 2px solid #00f0ff;
-    box-shadow: 0 0 20px #00f0ff;
-    padding: 20px;
-    border-radius: 15px;
-}
+    .card-header {
+      background: #00000055;
+      padding: 1rem 1.8rem;
+      border-bottom: 2px solid #ffcd4a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
-/* GRID */
-.grid {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-}
+    .card-header h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      background: linear-gradient(120deg, #ffdd88, #ffbb44);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
 
-.card {
-    width: 40%;
-    background: rgba(0,0,0,0.8);
-    border: 2px solid pink;
-    box-shadow: 0 0 15px pink;
-    padding: 15px;
-    margin: 10px;
-}
+    .card-body {
+      padding: 1.5rem 1.8rem;
+    }
 
-/* IMAGE STYLE */
-.creator img {
-    width: 200px;
-    border: 5px solid white;
-    transform: rotate(-5deg);
-}
+    /* special two-column for characters */
+    .two-col-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.8rem;
+    }
 
-/* NEON MAZE BACKGROUND EFFECT */
-.maze-bg {
-    background-image:
-        linear-gradient(blue 2px, transparent 2px),
-        linear-gradient(90deg, blue 2px, transparent 2px);
-    background-size: 40px 40px;
-    box-shadow: inset 0 0 50px blue;
-}
+    @media (max-width: 780px) {
+      .two-col-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .wiki-header h1 {
+        font-size: 2.8rem;
+        letter-spacing: 3px;
+      }
+      .wiki-grid {
+        padding: 1.2rem;
+      }
+    }
 
-/* PLAY SECTION */
-.play {
-    margin-top: 40px;
-}
+    .info-block {
+      background: #0e111f;
+      border-radius: 1.5rem;
+      padding: 1rem 1.4rem;
+      border-left: 6px solid #ffc857;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+    }
 
-.play-btn {
-    padding: 15px 40px;
-    font-size: 18px;
-    background: white;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-}
+    .info-block h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffd966;
+    }
 
-/* GHOST COLORS */
-.ghosts span {
-    display: inline-block;
-    margin: 5px;
-}
+    .ghost-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-top: 1rem;
+      justify-content: space-between;
+    }
 
-.red { color: red; text-shadow: 0 0 10px red; }
-.pink { color: pink; text-shadow: 0 0 10px pink; }
-.cyan { color: cyan; text-shadow: 0 0 10px cyan; }
-.orange { color: orange; text-shadow: 0 0 10px orange; }
+    .ghost-card {
+      background: #131a2c;
+      border-radius: 1.2rem;
+      flex: 1;
+      min-width: 110px;
+      text-align: center;
+      padding: 1rem 0.5rem;
+      transition: 0.1s linear;
+      border-bottom: 3px solid;
+    }
 
-</style>
+    .ghost-name {
+      font-weight: 800;
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .ghost-desc {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    /* specific ghost colors */
+    .blinky { border-bottom-color: #ff3b3b; background: #1f1a2c; }
+    .pinky { border-bottom-color: #ff9bdb; }
+    .inky { border-bottom-color: #5ce2ff; }
+    .clyde { border-bottom-color: #ffb347; }
+
+    .pacman-icon {
+      display: inline-block;
+      font-size: 1.8rem;
+      filter: drop-shadow(0 2px 4px gold);
+    }
+
+    hr {
+      border-color: #ffcd4a40;
+      margin: 0.5rem 0;
+    }
+
+    .quote-text {
+      font-style: italic;
+      font-size: 0.95rem;
+      background: #00000040;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      margin-top: 0.8rem;
+    }
+
+    .badge-pill {
+      background: #ffc85720;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      color: #ffda88;
+      font-weight: 500;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.2rem;
+      font-size: 0.75rem;
+      border-top: 1px solid #ffcd4a30;
+      color: #b9c3e0;
+      background: #03060e80;
+    }
+
+    .highlight {
+      color: #ffcd4a;
+      font-weight: 500;
+    }
+
+    .maze-icon {
+      font-size: 1.2rem;
+    }
+  </style>
 </head>
+<body>
+<div class="wiki-container">
+  <div class="wiki-header">
+    <h1>⚫ PAC-MAN ⚫</h1>
+    <div class="sub">ULTIMATE WIKI · THE LEGACY OF THE YELLOW HERO</div>
+  </div>
 
-<body class="maze-bg">
-
-<div class="title">PAC-MAN</div>
-<div class="subtitle">ULTIMATE WIKI</div>
-
-<div class="header">
-    <div class="pacman">◉ ● ● ● 👻 👻 👻 👻</div>
-</div>
-
-<a href="#history" class="btn">HOW IT ALL STARTED</a>
-<a href="#characters" class="btn">CHARACTERS</a>
-
-<!-- CREATOR -->
-<div id="history" class="box creator">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Toru_Iwatani.jpg">
-    <p>
-        TORU IWATANI IS A JAPANESE GAME DESIGNER WHO CREATED PAC-MAN IN 1980.
-        HE WANTED A NON-VIOLENT, FUN GAME FOR EVERYONE, DIFFERENT FROM SHOOTERS.
-    </p>
-</div>
-
-<!-- GAMEPLAY + CHARACTERS -->
-<div class="grid">
-
+  <div class="wiki-grid">
+    <!-- HOW IT ALL STARTED + CREATOR SECTION -->
     <div class="card">
-        <h3>PAC-MAN</h3>
-        <p>
-            A YELLOW CHARACTER THAT EATS DOTS THROUGH A MAZE.
-            HE MUST AVOID GHOSTS WHILE COLLECTING POINTS.
-        </p>
+      <div class="card-header">
+        <span class="pacman-icon">🕹️</span>
+        <h2>HOW IT ALL STARTED</h2>
+        <span class="badge-pill">1980 · revolution</span>
+      </div>
+      <div class="card-body">
+        <div class="two-col-layout" style="grid-template-columns: 1fr 1fr;">
+          <div class="info-block">
+            <h3>🎮 TORU IWATANI</h3>
+            <p><strong>Toru Iwatani</strong> is a legendary Japanese video game designer, best known as the visionary creator of <span class="highlight">Pac-Man</span> — one of the most iconic arcade games ever made. He joined Namco in the late 1970s with a bold mission: to break away from violent "shooting" games that dominated arcades. Instead of combat, Iwatani wanted to craft something <strong>friendly, charming, and accessible to everyone</strong> — including women and couples. That revolutionary idea gave birth to <strong>Pac-Man</strong> in 1980, a game where players guide a hungry yellow character through a maze, eating dots while outsmarting ghosts.</p>
+            <div class="quote-text">💡 "I wanted to create a game that everyone could enjoy, not just the hardcore shooter fans." — Toru Iwatani</div>
+          </div>
+          <div class="info-block">
+            <h3>⭐ BIRTH OF A LEGEND</h3>
+            <p>Released in Japan in <strong>May 1980</strong>, Pac-Man (originally "Puck-Man") took the world by storm. Its non-violent, maze-chase gameplay, combined with charming characters, redefined arcade culture. Pac-Man became a global phenomenon, generating billions in revenue and inspiring countless sequels, merchandise, and even a cartoon. The game's success proved that video games could be fun for all ages, forever changing the industry landscape.</p>
+            <p>✨ <strong>First video game character</strong> to achieve mainstream pop culture icon status.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="card ghosts">
-        <h3>GHOSTS</h3>
-        <p>
-            <span class="red">BLINKY</span>
-            <span class="pink">PINKY</span>
-            <span class="cyan">INKY</span>
-            <span class="orange">CLYDE</span>
-        </p>
-        <p>
-            THEY CHASE PAC-MAN. POWER PELLETS TURN THEM BLUE SO THEY CAN BE EATEN.
-        </p>
+    <!-- GAMEPLAY + PAC-MAN (character) -->
+    <div class="card">
+      <div class="card-header">
+        <span class="maze-icon">🌀</span>
+        <h2>GAME PLAY &nbsp;|&nbsp; PAC-MAN</h2>
+      </div>
+      <div class="card-body">
+        <div class="two-col-layout">
+          <div class="info-block">
+            <h3>🟡 THE MAZE · RULES</h3>
+            <p>In the classic maze, players control <strong>PAC-MAN</strong>, a round yellow hero with a dynamic chomping mouth. The goal is straightforward yet addictive: <strong>eat all the pellets</strong> (small dots) scattered across the maze while avoiding four relentless ghosts. Once all dots are cleared, the round advances. But danger lurks — touching any ghost means losing a life.</p>
+            <p>⚡ <strong>Power Pellets</strong> (large flashing dots) are game-changers: when Pac-Man eats one, all ghosts turn deep blue and become <strong>vulnerable</strong> for a short time. During this window, Pac-Man can devour them for bonus points, sending them back to the ghost house to respawn. Strategy and timing are everything!</p>
+          </div>
+          <div class="info-block">
+            <h3><span class="pacman-icon">🟡</span> PAC-MAN · THE ICON</h3>
+            <p><strong>Pac-Man</strong> is a cheerful, pizza-like yellow circle with a distinct mouth that opens and closes rhythmically as he moves through the neon labyrinth. He is controlled directly by the player and is <em>always in motion</em> — changing direction on command to navigate tight corridors, escape ambushes, and gobble pellets. Despite his simple design, Pac-Man's personality shines through his voracious appetite and underdog charm. He represents fun, persistence, and a touch of mischief.</p>
+            <p>🎮 <strong>Trivia:</strong> The character was inspired by a pizza missing a slice. Iwatani's vision was to create something warm and friendly, far from aggressive space invaders.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- CHARACTERS / GHOSTS section -->
+    <div class="card">
+      <div class="card-header">
+        <span>👻</span>
+        <h2>CHARACTERS · THE GHOSTS</h2>
+        <span class="badge-pill">fearsome foursome</span>
+      </div>
+      <div class="card-body">
+        <div class="info-block" style="margin-bottom: 1.2rem;">
+          <p>In Pac-Man, the ghosts are the primary antagonists that relentlessly hunt the player through the twisting maze. Each ghost has a distinct <strong>personality, behavior, and chase pattern</strong>, making every encounter unique. Known as the <strong>Ghost Gang</strong>, they work together to corner Pac-Man. But when Pac-Man consumes a Power Pellet, they turn <strong>blue and edible</strong> — turning the tables briefly. Here are the four iconic ghosts:</p>
+        </div>
+        <div class="ghost-list">
+          <div class="ghost-card blinky">
+            <div class="ghost-name" style="color:#ff6b6b;">👹 BLINKY</div>
+            <div class="ghost-desc">The red chaser<br><strong>Aggressive</strong> — always directly targets Pac-Man's position. The leader of the pack.</div>
+          </div>
+          <div class="ghost-card pinky">
+            <div class="ghost-name" style="color:#ffa5e0;">🌸 PINKY</div>
+            <div class="ghost-desc">The pink ambusher<br>Aims for a spot <strong>ahead</strong> of Pac-Man, trying to cut him off.</div>
+          </div>
+          <div class="ghost-card inky">
+            <div class="ghost-name" style="color:#7ad0ff;">🌀 INKY</div>
+            <div class="ghost-desc">The cyan trickster<br>Uses complex <strong>dual-position targeting</strong> — unpredictable and sneaky.</div>
+          </div>
+          <div class="ghost-card clyde">
+            <div class="ghost-name" style="color:#ffb35c;">🍊 CLYDE</div>
+            <div class="ghost-desc">The orange wanderer<br><strong>Changes behavior</strong> — chases when far, but flees when too close.</div>
+          </div>
+        </div>
+        <div class="quote-text" style="margin-top: 1.2rem;">
+          ⚡ <strong>Power Pellet effect:</strong> When Pac-Man eats a Power Pellet, all ghosts turn deep blue and reverse direction. Eating a blue ghost awards increasing points (200/400/800/1600). After a few seconds, ghosts flash white, then revert to their dangerous forms. This high-risk, high-reward mechanic defines classic Pac-Man strategy.
+        </div>
+        <hr style="margin: 1rem 0 0.5rem 0;">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.8rem; font-size: 0.85rem;">
+          <span>🎲 <strong>Blinky</strong> — speed increases when few dots remain</span>
+          <span>🎲 <strong>Pinky</strong> — notorious for ambush tactics</span>
+          <span>🎲 <strong>Inky</strong> — combines Blinky’s position to calculate vector</span>
+          <span>🎲 <strong>Clyde</strong> — scatter mode makes him less threatening</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- extra fun facts: ultimate wiki style -->
+    <div class="card">
+      <div class="card-header">
+        <span>🏆</span>
+        <h2>LEGACY & ULTIMATE TRIVIA</h2>
+      </div>
+      <div class="card-body">
+        <div class="two-col-layout" style="gap: 1.2rem;">
+          <div>
+            <h3 style="color:#ffcd4a; margin-bottom: 0.5rem;">📀 GLOBAL IMPACT</h3>
+            <ul style="margin-left: 1.2rem; list-style-type: '🟡 '; line-height: 1.6;">
+              <li>Over <strong>400,000 arcade cabinets</strong> sold worldwide</li>
+              <li>First video game with a <strong>power-up mechanic</strong> (Power Pellet)</li>
+              <li>Guinness World Records: "Most Successful Coin-Operated Game"</li>
+              <li>Inducted into the <strong>World Video Game Hall of Fame</strong></li>
+              <li>Inspired music, movies, cereal, and an animated series (1982)</li>
+            </ul>
+          </div>
+          <div>
+            <h3 style="color:#ffcd4a; margin-bottom: 0.5rem;">🕹️ GAMEPLAY SECRETS</h3>
+            <ul style="margin-left: 1.2rem; list-style-type: '👾 '; line-height: 1.6;">
+              <li><strong>Ghost patterns:</strong> Each ghost has unique "scatter" and "chase" modes</li>
+              <li>The famous <strong>256th level glitch</strong> (split-screen) — ultimate kill screen</li>
+              <li>Original name "Puck-Man" was changed to avoid vandalism</li>
+              <li>Ms. Pac-Man introduced more randomized ghost movement</li>
+              <li>Pac-Man's <strong>mouth direction</strong> influences hitbox precision</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top: 1.5rem; background: #0000004d; border-radius: 2rem; padding: 1rem; text-align: center; border: 1px dashed #ffb347;">
+          <span style="font-weight: bold; font-size: 1.2rem;">🎵 WAKA WAKA WAKA 🎵</span><br>
+          The iconic sound of Pac-Man munching dots is one of the most recognizable audio cues in gaming history — created by sound designer Toshio Kai.
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <span>© PAC-MAN ULTIMATE WIKI · created for arcade enthusiasts · all characters and trademarks belong to Bandai Namco Entertainment · inspired by Toru Iwatani's masterpiece</span><br>
+    <span style="letter-spacing: 1px;">⚡ maze · pellets · ghosts · power · legacy ⚡</span>
+  </footer>
 </div>
-
-<!-- GAME -->
-<div class="play">
-    <h2>FREE GAMEPLAY HERE</h2>
-
-    <iframe 
-        src="https://www.google.com/logos/2010/pacman10-i.html"
-        width="600"
-        height="400"
-        style="border:3px solid blue; box-shadow:0 0 20px blue;">
-    </iframe>
-
-    <br><br>
-    <button class="play-btn">Play</button>
-</div>
-
 </body>
 </html>
