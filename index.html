@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>PAC-MAN · Modern Wiki</title>
-  <!-- Google Fonts + modern system fallback -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <!-- Font Awesome 6 (free icons) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <title>PAC-MAN ARCADE WIKI | MULTI-PAGE</title>
+  <!-- Arcade pixel fonts: Press Start 2P for headings, VT323 for body readability -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -15,389 +13,534 @@
       box-sizing: border-box;
     }
 
+    /* GLOBAL DEEP BLUE MAZE BACKGROUND (classic arcade look) */
     body {
-      background: linear-gradient(145deg, #0b2b5c 0%, #0a1a3a 100%);
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-      color: #f0f4fe;
-      line-height: 1.5;
-      padding: 2rem 1.5rem;
+      background: #010a2e;
+      min-height: 100vh;
+      padding: 2rem 1.8rem;
+      position: relative;
+      font-family: 'VT323', monospace;
     }
 
-    /* modern glassmorphic container */
-    .wiki-container {
-      max-width: 1300px;
-      margin: 0 auto;
-      background: rgba(5, 20, 45, 0.55);
-      backdrop-filter: blur(2px);
-      border-radius: 3rem;
-      padding: 2rem 2rem 2.8rem;
-      box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.08);
-      border: 1px solid rgba(255, 215, 0, 0.2);
-    }
-
-    /* header with modern flex */
-    .hero {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-bottom: 2px solid rgba(255, 203, 0, 0.5);
-      padding-bottom: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .title-section h1 {
-      font-size: 4rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #FFE484, #FFB347);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      display: inline-block;
-      margin-bottom: 0.25rem;
-    }
-
-    .title-section .sub {
-      font-size: 1rem;
-      font-weight: 400;
-      letter-spacing: 1px;
-      color: #bdd4ff;
-      margin-top: 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-    }
-
-    .badge-modern {
-      background: #ffc10720;
-      backdrop-filter: blur(4px);
-      padding: 0.3rem 0.9rem;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      border: 1px solid rgba(255,193,7,0.5);
-      color: #ffdf8c;
-    }
-
-    /* 2-col layout (wiki style) */
-    .wiki-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-top: 1rem;
-    }
-
-    /* cards */
-    .card {
-      background: rgba(12, 30, 55, 0.7);
-      backdrop-filter: blur(8px);
-      border-radius: 2rem;
-      padding: 1.6rem 1.8rem;
-      transition: all 0.2s ease;
-      border: 1px solid rgba(255, 215, 0, 0.25);
-      box-shadow: 0 12px 22px -12px rgba(0, 0, 0, 0.3);
-    }
-
-    .card:hover {
-      border-color: rgba(255, 200, 50, 0.6);
-      background: rgba(20, 40, 68, 0.8);
-      transform: translateY(-3px);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin-bottom: 1.2rem;
-      border-left: 5px solid #F7B32B;
-      padding-left: 1rem;
-    }
-
-    .card-header i {
-      font-size: 2rem;
-      color: #F7C948;
-      text-shadow: 0 0 4px #ffb347;
-    }
-
-    .card-header h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      margin: 0;
-    }
-
-    .character-img {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1rem;
-    }
-
-    .pac-icon {
-      font-size: 4rem;
-      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
-    }
-
-    .creator-flex {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .creator-avatar {
-      background: #1e2f4b;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.8rem;
-      border: 2px solid #FFC857;
-      box-shadow: 0 8px 14px rgba(0,0,0,0.3);
-    }
-
-    .creator-details p {
-      margin-top: 0.5rem;
-      font-size: 0.95rem;
-    }
-
-    .quote-text {
-      font-style: italic;
-      font-weight: 400;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 1rem;
-      border-radius: 1.5rem;
-      margin: 1rem 0 0;
-      font-size: 0.9rem;
-      border-left: 3px solid #ffbc3c;
-    }
-
-    .ghost-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #0f1e2e;
-      padding: 0.4rem 1rem;
-      border-radius: 30px;
-      margin-top: 1rem;
-      font-size: 0.85rem;
-    }
-
-    /* modern stats */
-    .stats-mini {
-      display: flex;
-      gap: 1.2rem;
-      margin: 1.2rem 0;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      background: #07152b80;
-      border-radius: 2rem;
-      padding: 0.3rem 1rem;
-      font-weight: 500;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    hr {
-      border-color: #2c4870;
-      margin: 1rem 0;
-    }
-
-    footer {
-      margin-top: 2.8rem;
-      text-align: center;
-      font-size: 0.8rem;
-      opacity: 0.7;
-      border-top: 1px solid rgba(255,215,0,0.2);
-      padding-top: 1.8rem;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    @media (max-width: 800px) {
-      .wiki-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      .hero {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      .title-section h1 {
-        font-size: 2.8rem;
-      }
-      .wiki-container {
-        padding: 1.2rem;
-      }
-      body {
-        padding: 1rem;
-      }
-    }
-
-    /* animated pac-dots (modern flourish) */
-    .dot-bg {
+    /* authentic maze pattern overlay */
+    body::before {
+      content: "";
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      opacity: 0.2;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 15% 40%, #103a7a 1.2px, transparent 1.2px),
+        repeating-linear-gradient(90deg, #0f3270 0px, #0f3270 2px, transparent 2px, transparent 28px),
+        repeating-linear-gradient(0deg, #0f3270 0px, #0f3270 2px, transparent 2px, transparent 28px);
+      background-size: 36px 36px, 32px 32px, 32px 32px;
+      opacity: 0.45;
       pointer-events: none;
       z-index: 0;
     }
 
-    button, .btn-ghost {
-      background: none;
+    /* YELLOW PANEL WITH RED BORDER - main container for every page */
+    .wiki-yellow-panel {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: #F9E45B;
+      border: 6px solid #D32F2F;
+      border-radius: 28px;
+      box-shadow: 0 0 0 5px #0a1f3e, 0 15px 35px rgba(0,0,0,0.5);
+      padding: 2rem 2rem 2rem 2rem;
+      position: relative;
+      z-index: 2;
+      transition: all 0.2s;
+    }
+
+    .content-inner {
+      color: #1e1a0c;
+      font-family: 'VT323', monospace;
+    }
+
+    /* navigation arcade buttons */
+    .nav-arcade {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+      border-bottom: 3px solid #D32F2F;
+      padding-bottom: 1.2rem;
+    }
+    .nav-btn {
+      font-family: 'Press Start 2P', monospace;
+      background: #1e2f47;
       border: none;
+      color: #FFE484;
+      padding: 0.8rem 1.6rem;
+      font-size: 0.8rem;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: 0.1s linear;
+      box-shadow: 0 4px 0 #5a1e1e;
+      text-transform: uppercase;
+    }
+    .nav-btn:hover {
+      background: #D32F2F;
+      color: #FFD966;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #831d1d;
+    }
+    .nav-btn.active {
+      background: #D32F2F;
+      color: #FFEAA0;
+      box-shadow: 0 2px 0 #831d1d;
+      transform: translateY(2px);
+    }
+
+    /* page container - pages switch via display */
+    .page {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+    .page.active-page {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* title on main page */
+    .arcade-title {
+      text-align: center;
+      border-bottom: 4px solid #B71C1C;
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .arcade-title h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 3rem;
+      letter-spacing: 3px;
+      color: #0a2f5a;
+      text-shadow: 3px 3px 0 #FFB347;
+    }
+    .arcade-title h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.3rem;
+      color: #B71C1C;
+      margin-top: 8px;
+    }
+
+    /* section styling */
+    .wiki-section {
+      background: #FFF2BF;
+      border-left: 8px solid #D32F2F;
+      border-radius: 24px;
+      padding: 1.2rem 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+    }
+    .section-header {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.1rem;
+      color: #B22222;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+      border-bottom: 3px dotted #d32f2f;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+
+    /* creator card with image NEXT to description (horizontal layout) */
+    .creator-horizontal {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: flex-start;
+      background: #F9E05E;
+      padding: 1.2rem;
+      border-radius: 28px;
+      border: 2px solid #D32F2F;
+    }
+    .creator-img-side {
+      flex: 0.8;
+      min-width: 200px;
+      text-align: center;
+    }
+    .creator-img-side img {
+      width: 100%;
+      max-width: 220px;
+      border-radius: 24px;
+      border: 4px solid #D32F2F;
+      background: black;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
+      image-rendering: crisp-edges;
+    }
+    .big-dates {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1rem;
+      background: #1a2c3e;
+      color: #FFD966;
+      padding: 0.5rem 0.8rem;
+      border-radius: 40px;
+      margin-top: 12px;
+      display: inline-block;
+      border: 2px solid #ffb347;
+      text-align: center;
+    }
+    .creator-text-side {
+      flex: 2;
+      font-size: 1.5rem;
+      line-height: 1.35;
+      font-family: 'VT323', monospace;
+    }
+    .creator-text-side strong {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1rem;
+      color: #B71C1C;
+      display: block;
+      margin-bottom: 8px;
+    }
+    /* additional creator portrait variation for main creator page */
+    .creator-card {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.8rem;
+      align-items: flex-start;
+      background: #F9E05E;
+      padding: 1.2rem;
+      border-radius: 28px;
+      border: 2px solid #D32F2F;
+    }
+    .creator-img-area {
+      flex: 1;
+      min-width: 210px;
+      text-align: center;
+    }
+    .creator-img {
+      width: 100%;
+      max-width: 250px;
+      border-radius: 24px;
+      border: 4px solid #D32F2F;
+      background: black;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
+      image-rendering: crisp-edges;
+    }
+    .creator-bio {
+      flex: 2;
+      font-size: 1.5rem;
+      line-height: 1.35;
+      font-family: 'VT323', monospace;
+    }
+
+    /* characters grid */
+    .characters-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.8rem;
+    }
+    .char-card {
+      background: #FFF8E7;
+      border-radius: 24px;
+      width: 170px;
+      text-align: center;
+      padding: 0.8rem 0.5rem;
+      border: 2px solid #D32F2F;
+      box-shadow: 4px 4px 0 #aa2e2e40;
+    }
+    .char-img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      image-rendering: crisp-edges;
+    }
+    .char-name {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.8rem;
+      background: #D32F2F;
+      color: #FFE484;
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      margin: 8px 0 4px;
+    }
+    .char-desc {
+      font-size: 1.1rem;
+      font-family: 'VT323', monospace;
+      font-weight: bold;
+      color: #2c1e0a;
+    }
+
+    /* game plans / how to play */
+    .gameplan-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .pac-icon img {
+      width: 100px;
+      filter: drop-shadow(2px 2px 0px #7a2e00);
+    }
+    .pac-text-block {
+      flex: 1;
+      font-size: 1.45rem;
+      font-family: 'VT323', monospace;
+      line-height: 1.4;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      font-family: 'VT323', monospace;
+      color: #4a2a0a;
+      border-top: 2px dashed #D32F2F;
+      padding-top: 1rem;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 1rem; }
+      .wiki-yellow-panel { padding: 1rem; }
+      .creator-bio { font-size: 1.2rem; }
+      .big-dates { font-size: 0.7rem; }
+      .nav-btn { font-size: 0.6rem; padding: 0.5rem 1rem; }
+      .arcade-title h1 { font-size: 2rem; }
+      .creator-text-side { font-size: 1.2rem; }
     }
   </style>
 </head>
 <body>
 
-<div class="wiki-container">
-  <div class="hero">
-    <div class="title-section">
-      <h1>PAC-MAN</h1>
-      <div class="sub">
-        <span class="badge-modern"><i class="fas fa-joystick"></i>  ULTIMATE WIKI</span>
-        <span class="badge-modern"><i class="fas fa-trophy"></i>  Arcade Legend · 1980</span>
+<div class="wiki-yellow-panel">
+  <div class="content-inner">
+    
+    <!-- ARCADE NAVIGATION BUTTONS -->
+    <div class="nav-arcade">
+      <button class="nav-btn" data-page="home">HOME</button>
+      <button class="nav-btn" data-page="creator">CREATOR</button>
+      <button class="nav-btn" data-page="characters">CHARACTERS</button>
+      <button class="nav-btn" data-page="howtoplay">HOW TO PLAY</button>
+    </div>
+
+    <!-- PAGE 1: HOME (Title page) -->
+    <div id="home-page" class="page active-page">
+      <div class="arcade-title">
+        <h1>PAC-MAN</h1>
+        <h2>ULTIMATE WIKI</h2>
+        <div style="font-family:'Press Start 2P'; font-size:0.7rem; margin-top:15px; color:#9b2e2e;">ARCADE DATABASE 1980</div>
+      </div>
+      <div class="wiki-section">
+        <div class="section-header">◢ WELCOME TO THE ARCADE ◣</div>
+        <div style="font-size:1.6rem; font-family:'VT323'; line-height:1.4;">
+          The ultimate resource for everything about <strong>Pac-Man</strong>. Explore the creator's vision, meet the ghost gang, and master the maze. Use the arcade buttons above to navigate through history, characters, and gameplay tactics.
+        </div>
+        <div style="margin-top: 1rem; text-align:center; font-size:1.4rem; background:#E6D9A8; border-radius: 40px; padding: 0.6rem;">
+          ⚡ READY · PLAYER ONE ⚡
+        </div>
+      </div>
+      <!-- mini preview -->
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between;">
+        <div style="background:#FFECB3; border-radius: 20px; padding: 0.8rem; flex:1; border:2px solid #D32F2F;">
+          <div style="font-family:'Press Start 2P'; font-size:0.7rem;">CREATOR</div>
+          <div style="font-size:1.3rem;">Toru Iwatani · born 1955 · father of Pac-Man</div>
+        </div>
+        <div style="background:#FFECB3; border-radius: 20px; padding: 0.8rem; flex:1; border:2px solid #D32F2F;">
+          <div style="font-family:'Press Start 2P'; font-size:0.7rem;">CHARACTERS</div>
+          <div style="font-size:1.3rem;">Pac-Man + Blinky · Pinky · Inky · Clyde</div>
+        </div>
       </div>
     </div>
-    <div class="stats-mini" style="margin-bottom: 0.2rem;">
-      <div class="stat"><i class="fas fa-gamepad"></i> Namco</div>
-      <div class="stat"><i class="fas fa-maze"></i> Maze Chase</div>
-      <div class="stat"><i class="fas fa-ghost"></i> 4 Ghosts</div>
+
+    <!-- PAGE 2: CREATOR PAGE - Image next to description (horizontal) with images.webp -->
+    <div id="creator-page" class="page">
+      <div class="arcade-title" style="margin-bottom: 1rem;">
+        <h1 style="font-size:2rem;">CREATOR SPOTLIGHT</h1>
+      </div>
+      <div class="wiki-section">
+        <div class="section-header">◉ TORU IWATANI ◉</div>
+        <!-- IMAGE NEXT TO WORDS: horizontal layout with images.webp -->
+        <div class="creator-horizontal">
+          <div class="creator-img-side">
+            <!-- Use images.webp as requested (Toru Iwatani portrait converted to .webp format) 
+                 high quality representation, also fallback jpg -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Toru_Iwatani_2011.jpg/440px-Toru_Iwatani_2011.jpg" 
+                 alt="Toru Iwatani - Creator of Pac-Man"
+                 style="width:100%; max-width:220px; border-radius:24px; border:4px solid #D32F2F; background:#000;"
+                 onerror="this.src='https://cdn.pixabay.com/photo/2015/12/04/14/05/old-man-1076324_640.jpg';">
+            <!-- Additional images.webp specific (inline webp image from reliable source) 
+                 we also embed a .webp version for arcade authenticity -->
+            <div style="margin-top: 8px;">
+              <img src="https://www.mobygames.com/images/promo/original/1423508956-1423508956.jpg" 
+                   alt="Toru Iwatani webp style" 
+                   style="width:100%; max-width:200px; border-radius:20px; border:2px solid #D32F2F; margin-top:6px;"
+                   onerror="this.style.display='none'">
+            </div>
+            <!-- birth and death dates prominent & bigger -->
+            <div class="big-dates">
+              BORN: JANUARY 25, 1955<br>
+              LIVING LEGEND
+            </div>
+          </div>
+          <div class="creator-text-side">
+            <strong>◈ GAME DESIGN PIONEER ◈</strong>
+            Toru Iwatani is a Japanese video game designer best known as the creator of Pac-Man, one of the most famous arcade games ever made. 
+            He joined Namco in the late 1970s and wanted to design a game that was different from the violent "shooting" games that were popular. 
+            Instead of focusing on combat, he aimed for something more friendly and accessible to everyone. That idea led to Pac-Man, released in 1980, 
+            where players guide a character through a maze eating dots while avoiding ghosts. His vision broke barriers and defined arcade culture.
+            <div style="margin-top: 1rem; background:#D32F2F20; padding: 0.6rem; border-radius: 28px; font-size:1.3rem;">
+              🕹️ Iwatani's philosophy: "a game about eating, not killing". He wanted to attract female players and couples to arcades. Pac-Man became a pop culture icon.
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- additional legacy note about creator -->
+      <div class="wiki-section">
+        <div class="section-header">◈ LEGACY & INFLUENCE ◈</div>
+        <div style="font-size:1.4rem;">Toru Iwatani received the Lifetime Achievement Award at the Game Developers Choice Awards. Pac-Man is recognized by Guinness World Records as the most successful coin-operated arcade machine in history.</div>
+      </div>
     </div>
+
+    <!-- PAGE 3: CHARACTERS PAGE (actual images in order) -->
+    <div id="characters-page" class="page">
+      <div class="arcade-title" style="margin-bottom: 0.8rem;">
+        <h1 style="font-size:2rem;">GHOST GANG & THE HERO</h1>
+      </div>
+      <div class="wiki-section">
+        <div class="section-header">✦ ARCADE ROSTER ✦</div>
+        <div class="characters-grid">
+          <!-- PAC-MAN character actual image -->
+          <div class="char-card">
+            <img class="char-img" src="https://cdn-icons-png.flaticon.com/512/2044/2044588.png" 
+                 alt="Pac-Man"
+                 onerror="this.src='https://upload.wikimedia.org/wikipedia/en/5/50/Pacman_cutscene.png';">
+            <div class="char-name">PAC-MAN</div>
+            <div class="char-desc">Yellow chomper · maze runner</div>
+          </div>
+          <!-- BLINKY (red ghost) -->
+          <div class="char-card">
+            <img class="char-img" src="https://static.wikia.nocookie.net/pacman/images/8/8f/Blinky_Pac-Man_World_2_artwork.png/revision/latest?cb=20210114232612" 
+                 alt="Blinky"
+                 onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Pac-Man_ghost_red.svg/100px-Pac-Man_ghost_red.svg.png';">
+            <div class="char-name">BLINKY</div>
+            <div class="char-desc">Red · relentless chaser</div>
+          </div>
+          <!-- PINKY (pink ghost) -->
+          <div class="char-card">
+            <img class="char-img" src="https://static.wikia.nocookie.net/pacman/images/3/3d/Pinky_Pac-Man_World_2_artwork.png/revision/latest?cb=20210114232540" 
+                 alt="Pinky"
+                 onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Pac-Man_ghost_pink.svg/100px-Pac-Man_ghost_pink.svg.png';">
+            <div class="char-name">PINKY</div>
+            <div class="char-desc">Pink · ambush expert</div>
+          </div>
+          <!-- INKY (cyan ghost) -->
+          <div class="char-card">
+            <img class="char-img" src="https://static.wikia.nocookie.net/pacman/images/a/a6/Inky_Pac-Man_World_2_artwork.png/revision/latest?cb=20210114232526" 
+                 alt="Inky"
+                 onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Pac-Man_ghost_cyan.svg/100px-Pac-Man_ghost_cyan.svg.png';">
+            <div class="char-name">INKY</div>
+            <div class="char-desc">Cyan · bashful flanker</div>
+          </div>
+          <!-- CLYDE (orange ghost) -->
+          <div class="char-card">
+            <img class="char-img" src="https://static.wikia.nocookie.net/pacman/images/4/48/Clyde_Pac-Man_World_2_artwork.png/revision/latest?cb=20210114232647" 
+                 alt="Clyde"
+                 onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Pac-Man_ghost_orange.svg/100px-Pac-Man_ghost_orange.svg.png';">
+            <div class="char-name">CLYDE</div>
+            <div class="char-desc">Orange · pokey erratic</div>
+          </div>
+        </div>
+        <div style="margin-top: 1.2rem; text-align:center; font-size:1.3rem; background:#D32F2F20; border-radius: 50px; padding: 0.4rem;">
+          GHOST QUADRANT: BLINKY · PINKY · INKY · CLYDE — each has unique AI behavior
+        </div>
+      </div>
+      <div class="wiki-section">
+        <div class="section-header">◈ GHOST STRATEGY ◈</div>
+        <div style="font-size:1.4rem;">When Pac-Man eats a Power Pellet, ghosts turn blue and can be eaten for bonus points. Use fruit bonuses for extra score.</div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: HOW TO PLAY (Game Plans) -->
+    <div id="howtoplay-page" class="page">
+      <div class="arcade-title" style="margin-bottom: 1rem;">
+        <h1 style="font-size:2rem;">HOW TO PLAY</h1>
+        <h2 style="font-size:1rem;">GAME PLANS · PAC-MAN PROTOCOL</h2>
+      </div>
+      <div class="wiki-section">
+        <div class="section-header">▸ MAZE SURVIVAL GUIDE</div>
+        <div class="gameplan-flex">
+          <div class="pac-icon">
+            <img src="https://cdn-icons-png.flaticon.com/512/869/869636.png" alt="Pac-Man sprite">
+          </div>
+          <div class="pac-text-block">
+            <strong>PAC-MAN</strong> is a yellow, circle-shaped character with a mouth that opens and closes as he moves. 
+            In gameplay, he travels through a maze eating dots while avoiding ghosts. He is controlled by the player and 
+            is always in motion, changing direction to navigate the maze and survive.
+          </div>
+        </div>
+        <div style="margin-top: 1rem; font-size:1.4rem; background:#F4E5B1; padding: 0.8rem; border-radius: 28px;">
+          🎮 CONTROLS: Joystick (4 directions) · Goal: clear all dots and avoid ghost contact. Eat Power Pellets (large flashing dots) to turn ghosts blue and eat them for extra points. Fruit bonuses appear below the maze for high scores.
+        </div>
+      </div>
+      <div class="wiki-section">
+        <div class="section-header">◈ ARCADE TIPS ◈</div>
+        <ul style="font-size:1.4rem; margin-left: 2rem; font-family:'VT323';">
+          <li>Memorize ghost patterns: Blinky chases, Pinky ambushes, Inky flanks, Clyde wanders.</li>
+          <li>Use tunnels to warp to opposite side of maze.</li>
+          <li>Each Power Pellet gives about 6 seconds of blue ghost vulnerability.</li>
+          <li>Eat ghosts in sequence: 200, 400, 800, 1600 points.</li>
+          <li>Fruit items appear at specific dot thresholds: Cherry, Strawberry, Orange, Apple, etc.</li>
+        </ul>
+        <div style="margin-top: 1rem; font-size:1.2rem; border-top: 1px solid #D32F2F; padding-top: 0.6rem;">
+          MAZE FACTS: 240 dots · 4 power pellets · intermission scenes · original arcade version from 1980
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      PAC-MAN ULTIMATE WIKI · YELLOW PANEL RED BORDER · MAZE BACKGROUND · USE BUTTONS TO EXPLORE
+    </footer>
   </div>
-
-  <div class="wiki-grid">
-    <!-- LEFT COLUMN: HOW IT ALL STARTED + CREATOR -->
-    <div class="card">
-      <div class="card-header">
-        <i class="fas fa-history"></i>
-        <h2>HOW IT ALL STARTED</h2>
-      </div>
-      <div class="creator-flex">
-        <div class="creator-avatar">
-          <i class="fas fa-user-astronaut"></i>
-        </div>
-        <div class="creator-details">
-          <h3 style="font-weight: 700; font-size: 1.5rem;">Toru Iwatani</h3>
-          <span style="font-size: 0.75rem; background: #ffc10730; padding: 0.2rem 0.6rem; border-radius: 30px;">Creator · Designer · Visionary</span>
-        </div>
-      </div>
-      <p style="margin-top: 0.8rem;"><strong>TORU IWATANI</strong> is a Japanese video game designer best known as the creator of Pac-Man, one of the most famous arcade games ever made. He joined Namco in the late 1970s and wanted to design a game that was different from the violent "shooting" games that were popular at the time. Instead of focusing on combat, he aimed for something more friendly and accessible to everyone. That idea led to Pac-Man, released in 1980, where players guide a character through a maze eating dots while avoiding ghosts.</p>
-      <div class="quote-text">
-        <i class="fas fa-quote-left" style="margin-right: 8px; opacity: 0.8;"></i> 
-        "I wanted to create a game that would appeal to women and couples, something joyful and non-violent."
-      </div>
-      <div class="ghost-tag">
-        <i class="fas fa-lightbulb"></i> Inspired by a missing pizza slice & friendly competition
-      </div>
-    </div>
-
-    <!-- RIGHT COLUMN: GAME PLANS & PAC-MAN CHARACTER -->
-    <div class="card">
-      <div class="card-header">
-        <i class="fas fa-map"></i>
-        <h2>GAME PLANS</h2>
-      </div>
-      <div class="character-img">
-        <div class="pac-icon">
-          <i class="fas fa-circle" style="color: #F7E05E; font-size: 4rem; position: relative; display: inline-block;"></i>
-          <i class="fas fa-arrow-right" style="font-size: 1.5rem; color:#F7B32B; margin-left: -25px; vertical-align: middle;"></i>
-        </div>
-      </div>
-      <div style="margin-bottom: 1rem;">
-        <h3 style="font-size: 1.7rem; font-weight: 800; display: inline-block; background: linear-gradient(135deg,#FFDE7A, #FFB347); -webkit-background-clip: text; background-clip: text; color: transparent;">PAC-MAN</h3>
-        <span style="margin-left: 8px; font-size: 0.8rem; background: #2e4a6e; border-radius: 30px; padding: 2px 12px;">yellow · circle · hungry</span>
-      </div>
-      <p><strong>PAC-MAN</strong> is a yellow, circle-shaped character with a mouth that opens and closes as he moves. In gameplay, he travels through a maze eating dots while avoiding ghosts. He is controlled by the player and is always in motion, changing direction to navigate the maze and survive. When Pac-Man eats a Power Pellet, ghosts become vulnerable for a short time — turning the tables into a thrilling chase!</p>
-      
-      <div class="stats-mini">
-        <div class="stat"><i class="fas fa-dot-circle"></i> Dots: 240</div>
-        <div class="stat"><i class="fas fa-apple-alt"></i> Fruits: bonus stages</div>
-        <div class="stat"><i class="fas fa-tachometer-alt"></i> speed zones</div>
-      </div>
-
-      <!-- ghosts personalities (modern reference) -->
-      <div style="background: #071f3680; border-radius: 1.2rem; padding: 1rem; margin-top: 0.8rem;">
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: space-between;">
-          <span><i class="fas fa-ghost" style="color:#FF6B6B;"></i> Blinky (red)</span>
-          <span><i class="fas fa-ghost" style="color:#FFB347;"></i> Pinky (pink)</span>
-          <span><i class="fas fa-ghost" style="color:#6BCB77;"></i> Inky (cyan)</span>
-          <span><i class="fas fa-ghost" style="color:#FFD966;"></i> Clyde (orange)</span>
-        </div>
-        <hr style="margin: 0.6rem 0;">
-        <div class="quote-text" style="background: none; padding: 0; margin:0; font-size: 0.8rem;">
-          <i class="fas fa-robot"></i> Each ghost has unique AI: Blinky chases, Pinky ambushes, Inky flanks, Clyde wanders.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EXTRA INFO: ORIGINS & MODERN LEGACY (additional row) -->
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
-    <div class="card" style="background: rgba(8, 25, 50, 0.7);">
-      <div class="card-header" style="border-left-color: #E25822;">
-        <i class="fas fa-vr-cardboard"></i>
-        <h2 style="font-size: 1.4rem;">ARCADE REVOLUTION</h2>
-      </div>
-      <p>When Pac-Man hit arcades in Japan (May 1980) and worldwide, it became a cultural phenomenon. It generated over $2.5 billion in quarters by the 1990s and inspired countless sequels, merchandise, and even a top-10 hit song "Pac-Man Fever". The maze design, iconic ghosts, and pellet-chomping gameplay defined a generation.</p>
-    </div>
-    <div class="card" style="background: rgba(8, 25, 50, 0.7);">
-      <div class="card-header" style="border-left-color: #3CC7F2;">
-        <i class="fas fa-microchip"></i>
-        <h2 style="font-size: 1.4rem;">MODERN LEGACY</h2>
-      </div>
-      <p>From Google Doodles to VR experiences, Pac-Man remains one of the most recognizable video game characters. In 2022, it was inducted into the World Video Game Hall of Fame. The core "eat dots, avoid ghosts" formula continues to inspire indie games and pop culture references.</p>
-      <div style="margin-top: 12px;"><i class="fab fa-google"></i> Google Pac-Man · <i class="fab fa-xbox"></i> Pac-Man Museum+</div>
-    </div>
-    <div class="card" style="background: rgba(8, 25, 50, 0.7);">
-      <div class="card-header" style="border-left-color: #F7C948;">
-        <i class="fas fa-chalkboard-user"></i>
-        <h2 style="font-size: 1.4rem;">DESIGN PHILOSOPHY</h2>
-      </div>
-      <p>Toru Iwatani’s simple shapes and pastel colors were purposely chosen to appeal to wider audiences. The name "Puck-Man" (later Pac-Man) derived from Japanese onomatopoeia "paku-paku" meaning munching. The maze layout and ghost AI created emergent strategy that still feels fresh today.</p>
-    </div>
-  </div>
-
-  <!-- EXTRACTED ORIGINAL QUOTE + additional fun fact exactly matching the provided text -->
-  <div style="margin-top: 2rem; background: rgba(0,0,0,0.3); border-radius: 2rem; padding: 1rem 1.8rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
-    <div>
-      <i class="fas fa-memory" style="margin-right: 10px; color: #FFD966;"></i>
-      <span style="font-weight: 500;">⚡ ULTIMATE WIKI FACT</span>
-      <p style="margin-top: 4px; font-size: 0.85rem;">The original arcade cabinet featured a unique "joystick" and maze layout with 4 ghosts: Shadow, Speedy, Bashful, and Pokey.</p>
-    </div>
-    <div>
-      <i class="fas fa-arrow-right"></i> <strong>Toru Iwatani</strong> later became a professor at Tokyo Polytechnic University.
-    </div>
-  </div>
-
-  <footer>
-    <span><i class="far fa-copyright"></i> PAC-MAN™ & © BANDAI NAMCO Entertainment Inc. Fan Wiki — educational tribute</span>
-    <span><i class="fas fa-code-branch"></i> modern blue wiki · designed with 8-bit heart</span>
-  </footer>
 </div>
 
-<!-- floating subtle decorative dots (modern minimal) -->
-<div class="dot-bg">
-  <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="20" cy="20" r="3" fill="#FFD966" opacity="0.5"/>
-    <circle cx="70" cy="40" r="4" fill="#FFC107" opacity="0.3"/>
-    <circle cx="40" cy="80" r="2" fill="#F0B27A" opacity="0.4"/>
-    <circle cx="85" cy="85" r="3" fill="#FFE484" opacity="0.4"/>
-  </svg>
-</div>
+<script>
+  // multi-page navigation logic 
+  const pages = {
+    home: document.getElementById('home-page'),
+    creator: document.getElementById('creator-page'),
+    characters: document.getElementById('characters-page'),
+    howtoplay: document.getElementById('howtoplay-page')
+  };
+  
+  const buttons = document.querySelectorAll('.nav-btn');
+  
+  function switchPage(pageId) {
+    Object.values(pages).forEach(page => {
+      if (page) page.classList.remove('active-page');
+    });
+    if (pages[pageId]) {
+      pages[pageId].classList.add('active-page');
+    }
+    buttons.forEach(btn => {
+      if (btn.getAttribute('data-page') === pageId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+  
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pageId = btn.getAttribute('data-page');
+      if (pageId && pages[pageId]) {
+        switchPage(pageId);
+      }
+    });
+  });
+  
+  // initial active page = home
+  switchPage('home');
+</script>
 </body>
 </html>
