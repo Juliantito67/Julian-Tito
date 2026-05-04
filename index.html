@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>PAC-MAN ARCADE WIKI | Buttons 4,5,6 Moved Up + Panel Image</title>
+    <title>PAC-MAN ARCADE WIKI | Buttons 4,5,6 Adjusted + Panel Image</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -150,13 +150,13 @@
             display: flex;
             flex-direction: column;      /* Stack buttons and image vertically */
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.8rem;
             background: transparent;
             padding: 0.8rem 1.2rem;
             transform: translateX(40px);
         }
         
-        /* BORDER STAYS IN PLACE - unchanged, now wraps both buttons and image */
+        /* BORDER STAYS IN PLACE - wraps both buttons and image */
         .right-group::before {
             content: '';
             position: absolute;
@@ -185,12 +185,12 @@
         .right-corner-bl { bottom: -32px; left: -29px; }
         .right-corner-br { bottom: -32px; right: -22px; }
 
-        /* BUTTONS 4,5,6 MOVED UP FURTHER - now with translateY(-40px) */
+        /* BUTTONS 4,5,6 - moved DOWN (no upward shift now, back to natural position) */
         .right-buttons-container {
             display: flex;
             gap: 0.8rem;
             align-items: center;
-            transform: translateY(-40px); /* Moved up more */
+            transform: translateY(0px); /* Reset to normal / moved slightly down from previous upper state */
         }
 
         /* Panel image style - sits under buttons inside the border */
@@ -198,8 +198,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 0px;
-            transform: translateY(-12px); /* fine tune alignment */
+            margin-top: 4px;
         }
         .ctrl-panel-img {
             max-width: 180px;
@@ -704,13 +703,12 @@
             .title-area h1 { font-size: 1.3rem; }
             .joystick-card { flex-wrap: wrap; gap: 1rem; }
             .left-group, .right-group { transform: translateX(0); }
-            .right-buttons-container { transform: translateY(-32px); }
+            .right-buttons-container { transform: translateY(0px); }
             .ctrl-panel-img { max-width: 150px; }
         }
         @media (max-width: 860px) {
             .header-top { flex-direction: column; align-items: stretch; }
             .wiki-container { margin-top: 460px; }
-            .right-buttons-container { transform: translateY(-28px); }
         }
     </style>
 </head>
@@ -791,14 +789,14 @@
                 </div>
             </div>
 
-            <!-- RIGHT GROUP (Buttons 4,5,6) + PANEL IMAGE inside border -->
+            <!-- RIGHT GROUP (Buttons 4,5,6) + PANEL IMAGE inside border - buttons now at natural position (moved down from previous upper state) -->
             <div class="right-group">
                 <div class="right-corner-dot right-corner-tl"></div>
                 <div class="right-corner-dot right-corner-tr"></div>
                 <div class="right-corner-dot right-corner-bl"></div>
                 <div class="right-corner-dot right-corner-br"></div>
 
-                <!-- Buttons container - moved up further -->
+                <!-- Buttons container - reset position (moved down from earlier upward shift) -->
                 <div class="right-buttons-container">
                     <!-- BUTTON 4 - CREATOR -->
                     <div class="right-btn-container" data-nav="creator">
@@ -823,7 +821,7 @@
                     </div>
                 </div>
                 
-                <!-- ADDED PANEL IMAGE inside the same border, below the buttons -->
+                <!-- PANEL IMAGE inside the same border, below the buttons -->
                 <div class="right-panel-image">
                     <img class="ctrl-panel-img" src="https://github.com/pacman/museum/raw/main/pacman-character-artwork-pacman-ctrl-panel.webp?raw=true" 
                          alt="Pac-Man Control Panel Artwork" 
@@ -835,7 +833,7 @@
         <div class="status-panel" id="directionStatus">DIRECTION: CENTER</div>
     </div>
 
-    <!-- MAIN WIKI CONTENT -->
+    <!-- MAIN WIKI CONTENT (unchanged) -->
     <div class="wiki-container">
         <div id="home-page" class="page active-page">
             <div class="section-title">GAME PLANS</div>
@@ -897,6 +895,7 @@
     </div>
 
     <script>
+        // Character data
         const characters = [
             { name: "PAC-MAN", image: "https://cdn-icons-png.flaticon.com/512/2044/2044588.png", description: "The Hero of the Maze", purpose: "Eat all dots, avoid ghosts, and consume Power Pellets to turn the tables on his enemies." },
             { name: "BLINKY", image: "https://static.wikia.nocookie.net/pacman/images/8/8f/Blinky_Pac-Man_World_2_artwork.png/revision/latest?cb=20210114232612", description: "The Red Ghost - Shadow", purpose: "Chases Pac-Man directly. Becomes faster when few dots remain." },
@@ -988,6 +987,7 @@
             });
         }
         
+        // Joystick logic (unchanged)
         const joyBase = document.getElementById('joystickBase');
         const joyHandle = document.getElementById('joystickHandle');
         const statusDiv = document.getElementById('directionStatus');
