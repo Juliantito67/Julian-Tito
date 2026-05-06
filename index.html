@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>PAC-MAN WIKI | PLAY PAGE + JOYSTICK CONTROLS</title>
+    <title>PAC-MAN WIKI | ARCADE HUB</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
         * {
@@ -477,13 +477,15 @@
             color: #FFE484;
             border: 2px solid #FFB347;
         }
-        .game-embed {
-            background: #000000;
-            border-radius: 24px;
-            padding: 20px;
+        .empty-page {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
+            align-items: center;
+            min-height: 400px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.2rem;
+            color: #A0A0A0;
+            text-align: center;
         }
         .character-viewer {
             background: #1E1B10;
@@ -495,6 +497,16 @@
             align-items: center;
             border: 3px solid #E31C23;
             box-shadow: 0 0 0 4px #FFD966, 0 10px 25px black;
+        }
+        .char-description {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.8rem;
+            color: #FFD966;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: #000000aa;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
         }
         .char-box {
             background: #2A2418;
@@ -558,12 +570,37 @@
             padding-top: 1rem;
             color: #6A2E1A;
         }
+        .game-iframe-container {
+            background: #000000;
+            border-radius: 32px;
+            padding: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin: 1rem 0;
+            border: 3px solid #FFD966;
+        }
+        iframe.game-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 24px;
+            background: #1a1a2a;
+        }
+        .game-error {
+            background: #8B0000;
+            color: #FFE484;
+            font-family: 'Press Start 2P', monospace;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 28px;
+            margin: 1rem 0;
+        }
         @media (max-width: 860px) {
             .header-top { flex-direction: column; align-items: center; }
             .title-area h1, .title-area p { white-space: normal; text-align: center; }
             .header2-buttons { justify-content: center; margin-top: 0; }
             .wiki-container { margin-top: 320px; }
             .joystick-card { margin-top: 50px; }
+            iframe.game-frame { height: 400px; }
         }
     </style>
 </head>
@@ -572,7 +609,7 @@
         <div class="header-top">
             <div class="title-area">
                 <h1>PAC-MAN WIKI</h1>
-                <p>👾 PLAY WITH JOYSTICK · CLASSIC ARCADE</p>
+                <p>👾 THE DEFINITIVE ARCADE DATABASE</p>
             </div>
             <div id="header2Buttons" class="header2-buttons">
                 <div class="header2-btn" data-page="home">HOME</div>
@@ -615,10 +652,10 @@
                 </div>
             </div>
         </div>
-        <div class="status-panel" id="directionStatus">🎮 MOVE THE JOYSTICK TO PLAY PAC-MAN!</div>
+        <div class="status-panel" id="directionStatus">🎮 USE THE BUTTONS ABOVE TO NAVIGATE</div>
     </div>
     <div class="wiki-container">
-        <div id="home-page" class="page"></div>
+        <div id="home-page" class="page active-page"></div>
         <div id="creator-page" class="page"></div>
         <div id="characters-page" class="page"></div>
         <div id="howto-page" class="page"></div>
@@ -626,17 +663,8 @@
     </div>
 
     <script>
-        // ==================== WIKI PAGES ====================
-        function buildWikiPages() {
-            document.getElementById('home-page').innerHTML = `<div class="section-title">WELCOME!!</div><div class="arcade-text">To the Ultimate Pac-Man Wiki!</div><div class="info-card"><div class="arcade-text">To navigate the wiki, use the numbered buttons above. To play Pac-Man, go to the PLAY page and use the JOYSTICK to control Pac-Man!<br><br>Enjoy our website and have fun!!</div></div><div class="tip-section"><div class="badge">🎮 TIP</div><div class="arcade-text">Press button 2 (PLAY) to start the game, then drag the joystick to move Pac-Man!</div></div><footer>PAC-MAN - NAMCO 1980 - ETERNAL LEGEND</footer>`;
-            document.getElementById('creator-page').innerHTML = `<div class="section-title">TORU IWATANI - MASTER MIND</div><div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; margin: 1rem 0;"><img id="toruImg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Toru_Iwatani_2011.jpg/440px-Toru_Iwatani_2011.webp" alt="Toru Iwatani" style="width: 220px; border-radius: 28px; border: 5px solid #E31C23; background: white;"><div><div style="font-family:'Press Start 2P'; font-size:1.4rem; color:#A1220F;">TORU IWATANI</div><div style="font-family:'Press Start 2P'; font-size:1rem; background:#E31C23; color:#FFE484; display:inline-block; padding:8px 18px; border-radius:40px; margin:12px 0;">BORN: JAN 25, 1955  |  ALIVE AND LEGENDARY</div><div class="arcade-text">Japanese game designer, creator of Pac-Man (1980). Designed to move away from violent shooters. Philosophy: a game about eating, not killing.</div></div></div><footer>"Design games that make people smile" - Toru Iwatani</footer>`;
-            document.getElementById('characters-page').innerHTML = `<div class="section-title">MAZE HUNTERS AND GHOST SQUAD</div><div class="character-viewer"><div class="char-box"><div class="char-shape-canvas"><canvas id="geoCanvasRedesign" class="geo-canvas" width="300" height="300" style="width:175px; height:175px"></canvas></div><div id="charNameGeo" class="char-name">PAC-MAN</div><div id="charDescGeo" class="char-description-text">The hungry yellow hero. Eats dots and avoids ghosts.</div></div><div class="char-hint">🟡 PRESS THE YELLOW BUTTON (3) TO SEE THE NEXT CHARACTER 🟡</div></div><div class="info-card" style="text-align:center;"><div class="arcade-text">Each ghost has a unique AI personality. Blinky chases, Pinky ambushes, Inky flanks, Clyde roams.</div></div><footer>Classic ghost AI: unpredictable and iconic</footer>`;
-            document.getElementById('howto-page').innerHTML = `<div class="section-title">ARCADE INSTRUCTIONS</div><div class="grid-2col"><div class="grid-item"><div class="badge">OBJECTIVE</div><div class="arcade-text">Eat all dots while avoiding ghosts.</div></div><div class="grid-item"><div class="badge">CONTROLS</div><div class="arcade-text">Use the joystick to move Pac-Man</div></div><div class="grid-item"><div class="badge">POWER PELLETS</div><div class="arcade-text">Four flashing dots, ghosts turn blue and flee.</div></div><div class="grid-item"><div class="badge">FRUIT BONUSES</div><div class="arcade-text">Cherry, Strawberry, Orange, Apple</div></div></div><div class="tip-section"><div class="badge" style="background:#FFB347;">GHOST BEHAVIOR DEEP DIVE</div><div class="arcade-text">Blinky: Direct chase. Pinky: Ambush ahead. Inky: Complex flanking. Clyde: Random when close.</div></div><footer>Master patterns and turn the tables on ghosts</footer>`;
-            document.getElementById('play-page').innerHTML = `<div class="section-title">🕹️ PLAY PAC-MAN 🕹️</div><div class="game-embed" id="gameContainer"></div><div class="tip-section"><div class="badge">🎮 JOYSTICK CONTROLS</div><div class="arcade-text">Drag the joystick above to move Pac-Man! Eat all dots to win. Avoid ghosts unless they're blue!</div></div><footer>Use the joystick to move · Press RESTART to play again</footer>`;
-        }
-        
-        // ==================== CHARACTER DRAWING ====================
-        function drawPacManChar(ctx, w, h) {
+        // artwork functions
+        function drawPacMan(ctx, w, h) {
             const cx = w/2, cy = h/2, rad = w * 0.42;
             ctx.clearRect(0, 0, w, h);
             ctx.beginPath();
@@ -655,7 +683,7 @@
             ctx.fill();
         }
         
-        function drawGhostChar(ctx, w, h, bodyColor) {
+        function drawGhost(ctx, w, h, bodyColor, pupilColor) {
             const cx = w/2;
             const topY = h * 0.24;
             const bottomY = h * 0.72;
@@ -671,26 +699,28 @@
             ctx.roundRect(leftX, topY + 14, bodyW, bottomY - topY - 14, 20);
             ctx.fill();
             const eyeY = topY + 32;
+            const leftEyeX = cx - w*0.15;
+            const rightEyeX = cx + w*0.15;
             ctx.fillStyle = "#FFFFFF";
             ctx.beginPath();
-            ctx.ellipse(cx - w*0.15, eyeY, 27, 29, 0, 0, Math.PI*2);
+            ctx.ellipse(leftEyeX, eyeY, 27, 29, 0, 0, Math.PI*2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(cx + w*0.15, eyeY, 27, 29, 0, 0, Math.PI*2);
+            ctx.ellipse(rightEyeX, eyeY, 27, 29, 0, 0, Math.PI*2);
             ctx.fill();
-            ctx.fillStyle = "#3A86FF";
+            ctx.fillStyle = pupilColor;
             ctx.beginPath();
-            ctx.arc(cx - w*0.15 + 8, eyeY + 2, 17, 0, 2*Math.PI);
+            ctx.arc(leftEyeX + 8, eyeY + 2, 17, 0, 2*Math.PI);
             ctx.fill();
             ctx.beginPath();
-            ctx.arc(cx + w*0.15 + 8, eyeY + 2, 17, 0, 2*Math.PI);
+            ctx.arc(rightEyeX + 8, eyeY + 2, 17, 0, 2*Math.PI);
             ctx.fill();
             ctx.fillStyle = "#FFFFFF";
             ctx.beginPath();
-            ctx.arc(cx - w*0.15 + 3, eyeY - 5, 6, 0, 2*Math.PI);
+            ctx.arc(leftEyeX + 3, eyeY - 5, 6, 0, 2*Math.PI);
             ctx.fill();
             ctx.beginPath();
-            ctx.arc(cx + w*0.15 + 3, eyeY - 5, 6, 0, 2*Math.PI);
+            ctx.arc(rightEyeX + 3, eyeY - 5, 6, 0, 2*Math.PI);
             ctx.fill();
         }
         
@@ -711,331 +741,89 @@
             };
         }
         
-        const charactersData = [
-            { name: "PAC-MAN", draw: (ctx, w, h) => drawPacManChar(ctx, w, h), desc: "The hungry yellow hero. Eats dots and avoids ghosts." },
-            { name: "BLINKY", draw: (ctx, w, h) => drawGhostChar(ctx, w, h, "#E34234"), desc: "The red ghost. Relentless chaser. Speeds up when dots are few." },
-            { name: "PINKY", draw: (ctx, w, h) => drawGhostChar(ctx, w, h, "#FF99CC"), desc: "The pink ghost. Ambush predator. Tries to cut you off ahead." },
-            { name: "INKY", draw: (ctx, w, h) => drawGhostChar(ctx, w, h, "#3EC1D3"), desc: "The cyan ghost. Unpredictable flanker." },
-            { name: "CLYDE", draw: (ctx, w, h) => drawGhostChar(ctx, w, h, "#FFA559"), desc: "The orange ghost. Roamer and retreat." }
+        const characters = [
+            { name: "PAC-MAN", draw: (ctx, w, h) => drawPacMan(ctx, w, h), description: "The hungry yellow hero. Eats dots and avoids ghosts. No eyes — pure instinct." },
+            { name: "BLINKY", draw: (ctx, w, h) => drawGhost(ctx, w, h, "#E34234", "#3A86FF"), description: "The red ghost. Relentless chaser. Speeds up when dots are few." },
+            { name: "PINKY", draw: (ctx, w, h) => drawGhost(ctx, w, h, "#FF99CC", "#3A86FF"), description: "The pink ghost. Ambush predator. Tries to cut you off ahead." },
+            { name: "INKY", draw: (ctx, w, h) => drawGhost(ctx, w, h, "#3EC1D3", "#3A86FF"), description: "The cyan ghost. Unpredictable flanker. Uses complex teamwork AI." },
+            { name: "CLYDE", draw: (ctx, w, h) => drawGhost(ctx, w, h, "#FFA559", "#3A86FF"), description: "The orange ghost. Roamer and retreat. Acts randomly when close." }
         ];
         
-        let charIndex = 0;
-        let charCanvas = null, charCtx = null;
+        let currentIdx = 0;
+        let activePageId = 'home';
+        let canvasRef = null, ctxRef = null;
         
-        function updateCharacterDisplay() {
-            if (!charCtx) return;
-            const w = charCanvas.width, h = charCanvas.height;
-            charactersData[charIndex].draw(charCtx, w, h);
+        function renderCurrent() {
+            if (!ctxRef || !canvasRef) return;
+            const w = canvasRef.width, h = canvasRef.height;
+            characters[currentIdx].draw(ctxRef, w, h);
+        }
+        
+        function updateCharacterUI() {
+            if (!canvasRef) return;
+            renderCurrent();
             const nameSpan = document.getElementById('charNameGeo');
             const descSpan = document.getElementById('charDescGeo');
-            if (nameSpan) nameSpan.innerText = charactersData[charIndex].name;
-            if (descSpan) descSpan.innerText = charactersData[charIndex].desc;
+            if (nameSpan) nameSpan.innerText = characters[currentIdx].name;
+            if (descSpan) descSpan.innerText = characters[currentIdx].description;
+            const yellowBtn = document.querySelector('#cycleCharacterBtnContainer .left-arcade-btn');
+            if (yellowBtn) { yellowBtn.style.transform = 'scale(0.86)'; setTimeout(() => { if(yellowBtn) yellowBtn.style.transform = ''; }, 120); }
         }
         
         function cycleCharacter() {
-            charIndex = (charIndex + 1) % charactersData.length;
-            updateCharacterDisplay();
-        }
-        
-        // ==================== PAC-MAN GAME INTEGRATION ====================
-        let gameInitialized = false;
-        let gamePacmanNextDir = 'RIGHT';
-        let gamePacmanDir = 'RIGHT';
-        let gameActive = false;
-        let gameScriptLoaded = false;
-        
-        // This function will be called by the game to set the direction
-        window.setGameDirection = function(dir) {
-            if (gameActive && gamePacmanNextDir) {
-                gamePacmanNextDir = dir;
+            currentIdx = (currentIdx + 1) % characters.length;
+            if (activePageId === 'characters' && ctxRef) {
+                updateCharacterUI();
             }
-        };
+        }
         
-        // Inject the full Pac-Man game into the play page
-        function initPacManGame() {
-            const container = document.getElementById('gameContainer');
-            if (!container) return;
-            
-            // Create game HTML structure
-            container.innerHTML = `
-                <div style="background: #000000aa; border-radius: 2rem; padding: 1.5rem; box-shadow: 0 20px 35px rgba(0,0,0,0.5);">
-                    <canvas id="gameCanvas" width="560" height="620" style="display:block; margin:0 auto; border-radius:12px; box-shadow:0 0 0 4px #f0b90b;"></canvas>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; background:#1e1a2fcc; backdrop-filter:blur(4px); padding:0.6rem 1.8rem; border-radius:60px; color:#ffd966; gap:1rem; flex-wrap:wrap; justify-content:center;">
-                        <div style="background:#00000099; padding:0.3rem 1.2rem; border-radius:32px; font-size:1.7rem;">🍒 SCORE: <span id="scoreValue">0</span></div>
-                        <div style="background:#00000099; padding:0.3rem 1.2rem; border-radius:32px; font-size:1.7rem;">❤️ LIVES: <span id="livesValue">3</span></div>
-                        <button id="restartGameBtn" style="background:#ffb347; border:none; font-family:inherit; font-size:1.2rem; font-weight:bold; padding:0.3rem 1.2rem; border-radius:3rem; cursor:pointer; color:#2d1b00; box-shadow:0 3px 0 #a45d00;">🔄 RESTART</button>
-                        <div style="background:#00000099; padding:0.2rem 1rem; border-radius:2rem; font-size:1.3rem; text-transform:uppercase;" id="gameStatusText">⏸ READY</div>
-                    </div>
-                </div>
-            `;
-            
-            // Now inject the game script
-            const script = document.createElement('script');
-            script.src = 'https://gist.githubusercontent.com/anon/raw/pacman-game-joystick.js';
-            script.onerror = () => {
-                // Fallback: define game manually (simplified version that works with joystick)
-                initFallbackGame();
+        // GAME LOADER: opens /game/play inside the play page (folder "game", file "play")
+        function loadGameIntoPlayPage() {
+            const playPageDiv = document.getElementById('play-page');
+            if (!playPageDiv) return;
+            // clear existing content, then inject game container
+            playPageDiv.innerHTML = '';
+            const gameContainer = document.createElement('div');
+            gameContainer.className = 'game-iframe-container';
+            const iframe = document.createElement('iframe');
+            iframe.className = 'game-frame';
+            // Load from the specified path: "game/play" relative to current directory (folder "game" and file "play")
+            // We attempt to load "./game/play" or "game/play"
+            const gameUrl = './game/play';
+            iframe.src = gameUrl;
+            iframe.title = "PAC-MAN ARCADE GAME";
+            iframe.setAttribute('allowfullscreen', 'false');
+            iframe.onerror = () => {
+                console.error("Failed to load game at:", gameUrl);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'game-error';
+                errorDiv.innerHTML = '⚠️ GAME NOT FOUND ⚠️<br><span style="font-size:0.8rem;">Make sure a folder named "game" exists with a file "play" inside.<br>Example: /game/play (HTML or embedded game)</span><br><br>🕹️ Insert Coin to Retry';
+                gameContainer.innerHTML = '';
+                gameContainer.appendChild(errorDiv);
             };
-            document.body.appendChild(script);
-            
-            // For demo, we'll create a fully functional game directly
-            initFullGameInCanvas();
+            iframe.onload = () => {
+                const statusSpan = document.getElementById('directionStatus');
+                if(statusSpan) statusSpan.innerText = '🎮 GAME LOADED! USE ARCADE CONTROLS TO PLAY (inside iframe)';
+            };
+            gameContainer.appendChild(iframe);
+            playPageDiv.appendChild(gameContainer);
+            // add footer note
+            const footerNote = document.createElement('footer');
+            footerNote.style.marginTop = '1rem';
+            footerNote.style.textAlign = 'center';
+            footerNote.innerHTML = '🎮 GAME EMBEDDED FROM /game/play | PRESS BUTTONS TO RETURN TO WIKI';
+            playPageDiv.appendChild(footerNote);
         }
         
-        function initFullGameInCanvas() {
-            // Wait for DOM
-            setTimeout(() => {
-                const canvas = document.getElementById('gameCanvas');
-                if (!canvas) return;
-                
-                // Game constants
-                const CELL_SIZE = 20;
-                const MAP_COLS = 28;
-                const MAP_ROWS = 31;
-                
-                // Simplified maze for demo (classic layout)
-                const baseMaze = [
-                    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                    [1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1],
-                    [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1],
-                    [1,3,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,3,1],
-                    [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1],
-                    [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
-                    [1,2,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,2,1],
-                    [1,2,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,2,1],
-                    [1,2,2,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,2,2,1],
-                    [1,1,1,1,1,1,2,1,1,1,1,1,0,1,1,0,1,1,1,1,1,2,1,1,1,1,1,1],
-                    [0,0,0,0,0,1,2,1,1,1,1,1,0,1,1,0,1,1,1,1,1,2,1,0,0,0,0,0],
-                    [0,0,0,0,0,1,2,1,1,0,0,0,0,0,0,0,0,0,0,1,1,2,1,0,0,0,0,0],
-                    [0,0,0,0,0,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,0,0,0,0,0],
-                    [1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1],
-                    [2,2,2,2,2,2,2,0,0,0,1,1,2,2,2,2,1,1,0,0,0,2,2,2,2,2,2,2],
-                    [1,1,1,1,1,1,2,1,1,0,1,1,2,2,2,2,1,1,0,1,1,2,1,1,1,1,1,1],
-                    [0,0,0,0,0,1,2,1,1,0,0,0,2,2,2,2,0,0,0,1,1,2,1,0,0,0,0,0],
-                    [0,0,0,0,0,1,2,1,1,0,1,1,2,2,2,2,1,1,0,1,1,2,1,0,0,0,0,0],
-                    [0,0,0,0,0,1,2,1,1,0,0,0,2,2,2,2,0,0,0,1,1,2,1,0,0,0,0,0],
-                    [1,1,1,1,1,1,2,1,1,0,1,1,2,2,2,2,1,1,0,1,1,2,1,1,1,1,1,1],
-                    [1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1],
-                    [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1],
-                    [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1],
-                    [1,3,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,3,1],
-                    [1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,1,1],
-                    [1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,1,1],
-                    [1,2,2,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,2,2,1],
-                    [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1],
-                    [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1],
-                    [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1],
-                    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-                ];
-                
-                let maze = JSON.parse(JSON.stringify(baseMaze));
-                let pelletsLeft = 0;
-                let score = 0, lives = 3;
-                let ghostEatMode = false, powerTimer = 0;
-                let respawnInvincible = 0;
-                let winFlag = false;
-                
-                for(let r=0; r<MAP_ROWS; r++) {
-                    for(let c=0; c<MAP_COLS; c++) {
-                        if(maze[r][c] === 2 || maze[r][c] === 3) pelletsLeft++;
-                    }
-                }
-                
-                let pacman = { x: 14, y: 23, targetX: 14, targetY: 23, progress: 1 };
-                let moveProgress = 1;
-                
-                const ghosts = [
-                    { name: 'Blinky', x: 13, y: 14, targetX: 13, targetY: 14, progress: 1, direction: 'LEFT', bodyColor: '#E63946' },
-                    { name: 'Pinky', x: 13, y: 15, targetX: 13, targetY: 15, progress: 1, direction: 'RIGHT', bodyColor: '#FF85A1' },
-                    { name: 'Inky', x: 12, y: 15, targetX: 12, targetY: 15, progress: 1, direction: 'UP', bodyColor: '#4D9DE0' },
-                    { name: 'Clyde', x: 14, y: 15, targetX: 14, targetY: 15, progress: 1, direction: 'DOWN', bodyColor: '#F4A261' }
-                ];
-                
-                const dirVec = { 'UP': {x:0,y:-1}, 'DOWN':{x:0,y:1}, 'LEFT':{x:-1,y:0}, 'RIGHT':{x:1,y:0} };
-                function opposite(d) { return {UP:'DOWN',DOWN:'UP',LEFT:'RIGHT',RIGHT:'LEFT'}[d]; }
-                function isWalkable(col, row) { return col>=0 && col<MAP_COLS && row>=0 && row<MAP_ROWS && maze[row][col] !== 1; }
-                
-                function updateUI() {
-                    const scoreEl = document.getElementById('scoreValue');
-                    const livesEl = document.getElementById('livesValue');
-                    if (scoreEl) scoreEl.innerText = score;
-                    if (livesEl) livesEl.innerText = lives;
-                }
-                
-                function resetGame() {
-                    maze = JSON.parse(JSON.stringify(baseMaze));
-                    pelletsLeft = 0;
-                    score = 0;
-                    lives = 3;
-                    ghostEatMode = false;
-                    powerTimer = 0;
-                    respawnInvincible = 40;
-                    winFlag = false;
-                    moveProgress = 1;
-                    gameActive = true;
-                    
-                    for(let r=0; r<MAP_ROWS; r++) {
-                        for(let c=0; c<MAP_COLS; c++) {
-                            if(maze[r][c] === 2 || maze[r][c] === 3) pelletsLeft++;
-                        }
-                    }
-                    
-                    pacman = { x: 14, y: 23, targetX: 14, targetY: 23, progress: 1 };
-                    gamePacmanDir = 'RIGHT';
-                    gamePacmanNextDir = 'RIGHT';
-                    
-                    ghosts.forEach(g => {
-                        g.x = g.name === 'Blinky' ? 13 : (g.name === 'Pinky' ? 13 : (g.name === 'Inky' ? 12 : 14));
-                        g.y = 14 + (g.name === 'Blinky' ? 0 : (g.name === 'Pinky' ? 1 : (g.name === 'Inky' ? 1 : 1));
-                        g.targetX = g.x;
-                        g.targetY = g.y;
-                        g.progress = 1;
-                        g.direction = g.name === 'Blinky' ? 'LEFT' : (g.name === 'Pinky' ? 'RIGHT' : (g.name === 'Inky' ? 'UP' : 'DOWN'));
-                    });
-                    
-                    updateUI();
-                    const statusEl = document.getElementById('gameStatusText');
-                    if (statusEl) statusEl.innerText = '▶ PLAY';
-                }
-                
-                function updatePacman() {
-                    if (!gameActive) return;
-                    if (moveProgress >= 1) {
-                        pacman.x = pacman.targetX;
-                        pacman.y = pacman.targetY;
-                        
-                        let newDir = gamePacmanNextDir;
-                        let vec = dirVec[newDir];
-                        if (isWalkable(pacman.x + vec.x, pacman.y + vec.y)) gamePacmanDir = newDir;
-                        
-                        let curVec = dirVec[gamePacmanDir];
-                        if (isWalkable(pacman.x + curVec.x, pacman.y + curVec.y)) {
-                            pacman.targetX = pacman.x + curVec.x;
-                            pacman.targetY = pacman.y + curVec.y;
-                            moveProgress = 0;
-                        } else {
-                            pacman.targetX = pacman.x;
-                            pacman.targetY = pacman.y;
-                            moveProgress = 1;
-                        }
-                    }
-                }
-                
-                let mouthPhase = 0;
-                function updateAnimation() { mouthPhase = (mouthPhase + 0.72) % (Math.PI * 2); }
-                function getMouthOpen() { return 0.2 + (Math.sin(mouthPhase) + 1) / 2 * 0.8; }
-                
-                function draw() {
-                    const ctx = canvas.getContext('2d');
-                    ctx.clearRect(0, 0, 560, 620);
-                    
-                    for(let row=0; row<MAP_ROWS; row++) {
-                        for(let col=0; col<MAP_COLS; col++) {
-                            let cell = maze[row][col];
-                            let x = col*20, y = row*20;
-                            if(cell === 1) {
-                                ctx.fillStyle = '#2129b0';
-                                ctx.fillRect(x, y, 19.5, 19.5);
-                                ctx.fillStyle = '#3a4a8a';
-                                ctx.fillRect(x+2, y+2, 15.5, 15.5);
-                            } else if(cell === 2) {
-                                ctx.beginPath();
-                                ctx.arc(x+10, y+10, 3, 0, 2*Math.PI);
-                                ctx.fillStyle = '#f8f3cf';
-                                ctx.fill();
-                            } else if(cell === 3) {
-                                ctx.beginPath();
-                                ctx.arc(x+10, y+10, 7, 0, 2*Math.PI);
-                                ctx.fillStyle = '#ffaa66';
-                                ctx.fill();
-                                ctx.beginPath();
-                                ctx.arc(x+10, y+10, 3, 0, 2*Math.PI);
-                                ctx.fillStyle = '#ffdd99';
-                                ctx.fill();
-                            }
-                        }
-                    }
-                    
-                    for(let g of ghosts) {
-                        let t = g.progress;
-                        let dx = (g.x * (1-t) + g.targetX * t) * 20;
-                        let dy = (g.y * (1-t) + g.targetY * t) * 20;
-                        ctx.fillStyle = ghostEatMode && powerTimer > 0 ? '#5C6BC0' : g.bodyColor;
-                        ctx.beginPath();
-                        ctx.ellipse(dx+10, dy+8, 8, 9, 0, 0, 2*Math.PI);
-                        ctx.fill();
-                        ctx.fillRect(dx+2, dy+6, 16, 10);
-                        ctx.fillStyle = '#FFF';
-                        ctx.beginPath();
-                        ctx.arc(dx+5, dy+6, 2.5, 0, 2*Math.PI);
-                        ctx.arc(dx+15, dy+6, 2.5, 0, 2*Math.PI);
-                        ctx.fill();
-                        ctx.fillStyle = '#000';
-                        ctx.beginPath();
-                        ctx.arc(dx+6, dy+6.5, 1.2, 0, 2*Math.PI);
-                        ctx.arc(dx+16, dy+6.5, 1.2, 0, 2*Math.PI);
-                        ctx.fill();
-                    }
-                    
-                    let tP = moveProgress;
-                    let px = (pacman.x * (1-tP) + pacman.targetX * tP) * 20;
-                    let py = (pacman.y * (1-tP) + pacman.targetY * tP) * 20;
-                    let angle = gamePacmanDir === 'RIGHT' ? 0 : gamePacmanDir === 'DOWN' ? Math.PI/2 : gamePacmanDir === 'LEFT' ? Math.PI : -Math.PI/2;
-                    let open = getMouthOpen();
-                    ctx.beginPath();
-                    ctx.arc(px+10, py+10, 9.5, angle + open, angle - open);
-                    ctx.lineTo(px+10, py+10);
-                    ctx.fillStyle = '#FFD966';
-                    ctx.fill();
-                }
-                
-                function gameLoop() {
-                    updatePacman();
-                    if (moveProgress < 1) {
-                        moveProgress = Math.min(1, moveProgress + 0.11);
-                        if (moveProgress >= 1) {
-                            let cell = maze[pacman.targetY][pacman.targetX];
-                            if (cell === 2) { maze[pacman.targetY][pacman.targetX] = 0; score += 10; pelletsLeft--; updateUI(); }
-                            if (cell === 3) { maze[pacman.targetY][pacman.targetX] = 0; score += 50; pelletsLeft--; ghostEatMode = true; powerTimer = 450; updateUI(); }
-                            pacman.x = pacman.targetX;
-                            pacman.y = pacman.targetY;
-                        }
-                    }
-                    updateAnimation();
-                    draw();
-                    requestAnimationFrame(gameLoop);
-                }
-                
-                resetGame();
-                gameActive = true;
-                gameLoop();
-                
-                document.getElementById('restartGameBtn')?.addEventListener('click', () => resetGame());
-                
-                // Expose direction setter
-                window.setGameDirection = (dir) => { if (gameActive) gamePacmanNextDir = dir; };
-            }, 100);
+        function buildFullPages() {
+            document.getElementById('home-page').innerHTML = `<div class="section-title">WELCOME!!</div><div class="arcade-text">To the Ultimate Pac-Man Wiki!</div><div class="info-card"><div class="arcade-text">To navigate or even play a page, use the buttons above and discover which button leads to which page.<br><br>Enjoy our website and have fun!!</div></div><div class="tip-section"><div class="badge">🎮 TIP</div><div class="arcade-text">Press the PLAY button or arcade buttons to launch the game from /game/play</div></div><footer>PAC-MAN - NAMCO 1980 - ETERNAL LEGEND</footer>`;
+            document.getElementById('creator-page').innerHTML = `<div class="section-title">TORU IWATANI - MASTER MIND</div><div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; margin: 1rem 0;"><img id="toruImg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Toru_Iwatani_2011.jpg/440px-Toru_Iwatani_2011.webp" alt="Toru Iwatani" style="width: 220px; border-radius: 28px; border: 5px solid #E31C23; background: white;"><div><div style="font-family:'Press Start 2P'; font-size:1.4rem; color:#A1220F;">TORU IWATANI</div><div style="font-family:'Press Start 2P'; font-size:1rem; background:#E31C23; color:#FFE484; display:inline-block; padding:8px 18px; border-radius:40px; margin:12px 0;">BORN: JAN 25, 1955  |  ALIVE AND LEGENDARY</div><div class="arcade-text">Japanese game designer, creator of Pac-Man (1980). Designed to move away from violent shooters. Philosophy: a game about eating, not killing.</div></div></div><footer>"Design games that make people smile" - Toru Iwatani</footer>`;
+            document.getElementById('characters-page').innerHTML = `<div class="section-title">MAZE HUNTERS AND GHOST SQUAD</div><div class="character-viewer"><div class="char-description" id="charDescGeo">Click the YELLOW button (3) to cycle characters</div><div class="char-box"><div class="char-shape-canvas"><canvas id="geoCanvasRedesign" class="geo-canvas" width="300" height="300" style="width:175px; height:175px"></canvas></div><div id="charNameGeo" class="char-name">PAC-MAN</div><div id="charDescGeo" class="char-description-text">The hungry yellow hero. Eats dots and avoids ghosts. No eyes — pure instinct.</div></div><div class="char-hint">🟡 PRESS THE YELLOW BUTTON (3) TO SEE THE NEXT CHARACTER 🟡</div></div><div class="info-card" style="text-align:center;"><div class="arcade-text">Each ghost has a unique AI personality. Blinky chases, Pinky ambushes, Inky flanks, Clyde roams.</div></div><footer>Classic ghost AI: unpredictable and iconic</footer>`;
+            document.getElementById('howto-page').innerHTML = `<div class="section-title">ARCADE INSTRUCTIONS</div><div class="grid-2col"><div class="grid-item"><div class="badge">OBJECTIVE</div><div class="arcade-text">Eat all dots while avoiding ghosts.</div></div><div class="grid-item"><div class="badge">CONTROLS</div><div class="arcade-text">Arcade buttons or joystick - navigate pages</div></div><div class="grid-item"><div class="badge">POWER PELLETS</div><div class="arcade-text">Four flashing dots, ghosts turn blue and flee.</div></div><div class="grid-item"><div class="badge">FRUIT BONUSES</div><div class="arcade-text">Cherry, Strawberry, Orange, Apple</div></div></div><div class="tip-section"><div class="badge" style="background:#FFB347;">GHOST BEHAVIOR DEEP DIVE</div><div class="arcade-text">Blinky: Direct chase. Pinky: Ambush ahead. Inky: Complex flanking. Clyde: Random when close.</div></div><footer>Master patterns and turn the tables on ghosts</footer>`;
+            // Play page will be dynamically loaded with game when first accessed
+            document.getElementById('play-page').innerHTML = `<div class="empty-page"><div>🎮 LOADING ARCADE...<br>PRESS PLAY BUTTON</div></div>`;
         }
         
-        // Override init
-        function initPacManGameDirect() {
-            const container = document.getElementById('gameContainer');
-            if (!container) return;
-            container.innerHTML = `
-                <div style="background: #000000aa; border-radius: 2rem; padding: 1.5rem;">
-                    <canvas id="gameCanvas" width="560" height="620" style="display:block; margin:0 auto; border-radius:12px; box-shadow:0 0 0 4px #f0b90b;"></canvas>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; background:#1e1a2fcc; padding:0.6rem 1.8rem; border-radius:60px; color:#ffd966; gap:1rem; flex-wrap:wrap; justify-content:center;">
-                        <div style="background:#00000099; padding:0.3rem 1.2rem; border-radius:32px; font-size:1.7rem;">🍒 SCORE: <span id="scoreValue">0</span></div>
-                        <div style="background:#00000099; padding:0.3rem 1.2rem; border-radius:32px; font-size:1.7rem;">❤️ LIVES: <span id="livesValue">3</span></div>
-                        <button id="restartGameBtn" style="background:#ffb347; border:none; font-family:inherit; font-size:1.2rem; font-weight:bold; padding:0.3rem 1.2rem; border-radius:3rem; cursor:pointer; color:#2d1b00;">🔄 RESTART</button>
-                        <div style="background:#00000099; padding:0.2rem 1rem; border-radius:2rem; font-size:1.3rem;" id="gameStatusText">▶ PLAY</div>
-                    </div>
-                </div>
-            `;
-            initFullGameInCanvas();
-        }
-        
-        // ==================== PAGE NAVIGATION ====================
         const pages = {
             home: document.getElementById('home-page'),
             creator: document.getElementById('creator-page'),
@@ -1043,8 +831,6 @@
             howto: document.getElementById('howto-page'),
             play: document.getElementById('play-page')
         };
-        
-        let activePageId = 'home';
         
         function switchToPage(pageId) {
             if (activePageId === pageId) return;
@@ -1057,20 +843,26 @@
             });
             if (pageId === 'characters') {
                 setTimeout(() => {
-                    charCanvas = document.getElementById('geoCanvasRedesign');
-                    if (charCanvas) {
-                        charCtx = charCanvas.getContext('2d');
-                        charCanvas.width = 300;
-                        charCanvas.height = 300;
-                        updateCharacterDisplay();
+                    canvasRef = document.getElementById('geoCanvasRedesign');
+                    if (canvasRef) {
+                        ctxRef = canvasRef.getContext('2d');
+                        canvasRef.width = 300;
+                        canvasRef.height = 300;
+                        renderCurrent();
+                        const nSpan = document.getElementById('charNameGeo');
+                        const dSpan = document.getElementById('charDescGeo');
+                        if (nSpan) nSpan.innerText = characters[currentIdx].name;
+                        if (dSpan) dSpan.innerText = characters[currentIdx].description;
                     }
                 }, 30);
             }
-            if (pageId === 'play' && !gameInitialized) {
-                gameInitialized = true;
-                initPacManGameDirect();
+            if (pageId === 'play') {
+                // Load game from /game/play each time play page is opened
+                loadGameIntoPlayPage();
             }
         }
+        
+        buildFullPages();
         
         // Arcade button navigation
         document.querySelector('.left-btn-container[data-nav="home"]')?.addEventListener('click', () => switchToPage('home'));
@@ -1079,19 +871,26 @@
         document.querySelector('.right-btn-container[data-nav="characters"]')?.addEventListener('click', () => switchToPage('characters'));
         document.querySelector('.right-btn-container[data-nav="howto"]')?.addEventListener('click', () => switchToPage('howto'));
         
-        document.getElementById('cycleCharacterBtnContainer')?.addEventListener('click', () => { if (activePageId === 'characters') cycleCharacter(); });
+        const cycleBtn = document.getElementById('cycleCharacterBtnContainer');
+        if (cycleBtn) {
+            cycleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cycleCharacter();
+                if (activePageId === 'characters' && canvasRef) {
+                    updateCharacterUI();
+                }
+            });
+        }
         
-        // ==================== JOYSTICK FOR GAME CONTROL ====================
+        // electrical switches toggle
+        document.getElementById('electricalSwitch1')?.addEventListener('click', function() { this.classList.toggle('active'); });
+        document.getElementById('electricalSwitch2')?.addEventListener('click', function() { this.classList.toggle('active'); });
+        
+        // JOYSTICK - visual only (no navigation)
         const joyBase = document.getElementById('joystickBase');
         const joyHandle = document.getElementById('joystickHandle');
         let dragActive = false;
         const LIMIT = 26;
-        
-        function getDirectionFromOffset(x, y) {
-            if (Math.abs(x) < 8 && Math.abs(y) < 8) return null;
-            if (Math.abs(x) > Math.abs(y)) return x > 0 ? 'RIGHT' : 'LEFT';
-            return y > 0 ? 'DOWN' : 'UP';
-        }
         
         function getVector(cx, cy) {
             const rect = joyBase.getBoundingClientRect();
@@ -1108,18 +907,15 @@
             const off = getVector(cx, cy);
             if (off.active) {
                 joyHandle.style.transform = `translate(calc(-50% + ${off.x}px), calc(-50% + ${off.y}px))`;
-                const dir = getDirectionFromOffset(off.x, off.y);
-                if (dir && activePageId === 'play') {
-                    window.setGameDirection?.(dir);
-                    document.getElementById('directionStatus').innerText = `🎮 MOVING: ${dir}`;
-                } else if (dir) {
-                    document.getElementById('directionStatus').innerText = `🎮 JOYSTICK: ${dir} (Go to PLAY page to control Pac-Man)`;
-                } else {
-                    document.getElementById('directionStatus').innerText = `🎮 MOVE THE JOYSTICK TO PLAY PAC-MAN!`;
+                let dir = "CENTER";
+                if (Math.abs(off.x) > 8 || Math.abs(off.y) > 8) {
+                    if (Math.abs(off.x) > Math.abs(off.y)) dir = off.x > 0 ? "RIGHT" : "LEFT";
+                    else dir = off.y > 0 ? "DOWN" : "UP";
                 }
+                document.getElementById('directionStatus').innerText = `🎮 STICK: ${dir} (visual only)`;
             } else {
                 joyHandle.style.transform = `translate(-50%, -50%)`;
-                if (activePageId !== 'play') document.getElementById('directionStatus').innerText = `🎮 MOVE THE JOYSTICK TO PLAY PAC-MAN!`;
+                document.getElementById('directionStatus').innerText = `🎮 USE BUTTONS TO NAVIGATE — PLAY BUTTON LAUNCHES GAME`;
             }
         }
         
@@ -1142,6 +938,7 @@
         function onEnd() {
             dragActive = false;
             joyHandle.style.transform = `translate(-50%, -50%)`;
+            document.getElementById('directionStatus').innerText = `🎮 USE BUTTONS TO NAVIGATE — PLAY BUTTON LAUNCHES GAME`;
         }
         
         if (joyBase) {
@@ -1153,12 +950,7 @@
             window.addEventListener('touchend', onEnd);
         }
         
-        // Electrical switches
-        document.getElementById('electricalSwitch1')?.addEventListener('click', function() { this.classList.toggle('active'); });
-        document.getElementById('electricalSwitch2')?.addEventListener('click', function() { this.classList.toggle('active'); });
-        
-        // Initialize
-        buildWikiPages();
+        // Start with HOME
         switchToPage('home');
         
         const toruImage = document.getElementById('toruImg');
