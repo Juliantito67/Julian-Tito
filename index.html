@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>PAC-MAN WIKI | ARCADE HUB</title>
+    <title>PAC-MAN WIKI | JOYSTICK CONTROLS PAC-MAN</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
         * {
@@ -610,7 +610,7 @@
         <div class="header-top">
             <div class="title-area">
                 <h1>PAC-MAN WIKI</h1>
-                <p>👾 THE DEFINITIVE ARCADE DATABASE</p>
+                <p>👾 JOYSTICK CONTROLS PAC-MAN!</p>
             </div>
             <div id="header2Buttons" class="header2-buttons">
                 <div class="header2-btn" data-page="home">HOME</div>
@@ -641,7 +641,7 @@
             </div>
             <div class="joystick-area">
                 <div class="switches-container"><div class="electrical-switch" id="electricalSwitch1"></div><div class="electrical-switch" id="electricalSwitch2"></div></div>
-                <div class="stick-wrapper"><div id="joystickBase" class="joystick-base"><div class="triangle-up"></div><div class="triangle-down"></div><div class="triangle-left"></div><div class="triangle-right"></div><div id="joystickHandle" class="joystick-handle"></div></div><div class="double-border-gap"><div class="inner-border"></div><div class="outer-border"></div><div class="move-label">MOVE</div></div></div>
+                <div class="stick-wrapper"><div id="joystickBase" class="joystick-base"><div class="triangle-up"></div><div class="triangle-down"></div><div class="triangle-left"></div><div class="triangle-right"></div><div id="joystickHandle" class="joystick-handle"></div></div><div class="double-border-gap"><div class="inner-border"></div><div class="outer-border"></div><div class="move-label">DRAG TO CONTROL PAC-MAN!</div></div></div>
             </div>
             <div class="right-group">
                 <div class="right-corner-dot right-corner-tl"></div><div class="right-corner-dot right-corner-tr"></div>
@@ -653,7 +653,7 @@
                 </div>
             </div>
         </div>
-        <div class="status-panel" id="directionStatus">🎮 PRESS PLAY TO LAUNCH GAME (play.html INSIDE PAGE)</div>
+        <div class="status-panel" id="directionStatus">🎮 DRAG THE JOYSTICK → CONTROLS PAC-MAN IN THE GAME!</div>
     </div>
     <div class="wiki-container">
         <div id="home-page" class="page active-page"></div>
@@ -664,7 +664,7 @@
     </div>
 
     <script>
-        // Artwork functions
+        // Artwork functions (keeping your existing ones)
         function drawPacMan(ctx, w, h) {
             const cx = w/2, cy = h/2, rad = w * 0.42;
             ctx.clearRect(0, 0, w, h);
@@ -778,68 +778,44 @@
             }
         }
         
-        // EMBED play.html INSIDE the page using iframe (not redirect)
+        // EMBED play.html INSIDE the page using iframe
         function embedPlayGame() {
             const playPageDiv = document.getElementById('play-page');
             if (!playPageDiv) return;
             
-            // Clear the play page content
             playPageDiv.innerHTML = '';
             
-            // Create container for the game
             const gameContainer = document.createElement('div');
             gameContainer.className = 'game-iframe-container';
             
-            // Create iframe to load play.html
             const iframe = document.createElement('iframe');
             iframe.className = 'game-frame';
             iframe.src = 'play.html';
             iframe.title = 'PAC-MAN ARCADE GAME';
             iframe.setAttribute('allowfullscreen', 'false');
             
-            // Handle iframe load error (404 or missing file)
-            iframe.onerror = () => {
-                gameContainer.innerHTML = `<div class="game-error-message">⚠️ GAME NOT FOUND! ⚠️<br><br>Make sure <strong style="color:#FFD966;">play.html</strong> exists in the same folder as this wiki page.<br><br>🎮 Create play.html or check the file path.</div>`;
-                playPageDiv.appendChild(gameContainer);
-            };
-            
-            // Try to detect if loading failed using timeout fallback
-            let loadFailed = true;
             iframe.onload = () => {
-                loadFailed = false;
                 const statusSpan = document.getElementById('directionStatus');
-                if (statusSpan) statusSpan.innerText = '🎮 GAME LOADED! play.html is running inside the wiki page!';
+                if (statusSpan) statusSpan.innerText = '🎮 GAME LOADED! Drag the joystick to move Pac-Man!';
+                statusSpan.style.color = '#88ff88';
             };
-            
-            // Fallback: if after 3 seconds iframe didn't load properly, show error
-            setTimeout(() => {
-                if (loadFailed && gameContainer.contains(iframe)) {
-                    iframe.style.display = 'none';
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'game-error-message';
-                    errorDiv.innerHTML = '⚠️ COULD NOT LOAD play.html ⚠️<br><br>Please ensure the file exists at: <strong>./play.html</strong><br><br>🕹️ Create a file named "play.html" next to this wiki page.';
-                    gameContainer.appendChild(errorDiv);
-                }
-            }, 2000);
             
             gameContainer.appendChild(iframe);
             playPageDiv.appendChild(gameContainer);
             
-            // Add a footer note about returning to other pages
             const footerNote = document.createElement('footer');
             footerNote.style.marginTop = '1rem';
             footerNote.style.textAlign = 'center';
-            footerNote.innerHTML = '🎮 GAME EMBEDDED FROM play.html | Use the navigation buttons above to return to Wiki pages 🎮';
+            footerNote.innerHTML = '🎮 DRAG THE RED JOYSTICK ABOVE → CONTROLS PAC-MAN! 🎮';
             playPageDiv.appendChild(footerNote);
         }
         
         function buildFullPages() {
-            document.getElementById('home-page').innerHTML = `<div class="section-title">WELCOME!!</div><div class="arcade-text">To the Ultimate Pac-Man Wiki!</div><div class="info-card"><div class="arcade-text">Use the arcade buttons above to navigate.<br><br>Press the <span style="background:#8B0000; color:#FFD966; padding:0 8px; border-radius:20px;">PLAY BUTTON</span> to launch play.html — the game runs INSIDE this page!</div></div><div class="tip-section"><div class="badge">🎮 TIP</div><div class="arcade-text">play.html is embedded via iframe — you never leave the wiki!</div></div><footer>PAC-MAN - NAMCO 1980 - ETERNAL LEGEND</footer>`;
+            document.getElementById('home-page').innerHTML = `<div class="section-title">WELCOME!!</div><div class="arcade-text">To the Ultimate Pac-Man Wiki!</div><div class="info-card"><div class="arcade-text">Use the arcade buttons above to navigate.<br><br>Press the <span style="background:#8B0000; color:#FFD966; padding:0 8px; border-radius:20px;">PLAY BUTTON</span> then DRAG THE JOYSTICK to control Pac-Man!</div></div><div class="tip-section"><div class="badge">🎮 TIP</div><div class="arcade-text">The red joystick now ACTUALLY controls Pac-Man in real-time via postMessage!</div></div><footer>PAC-MAN - NAMCO 1980 - JOYSTICK INTEGRATION</footer>`;
             document.getElementById('creator-page').innerHTML = `<div class="section-title">TORU IWATANI - MASTER MIND</div><div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; margin: 1rem 0;"><img id="toruImg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Toru_Iwatani_2011.jpg/440px-Toru_Iwatani_2011.webp" alt="Toru Iwatani" style="width: 220px; border-radius: 28px; border: 5px solid #E31C23; background: white;"><div><div style="font-family:'Press Start 2P'; font-size:1.4rem; color:#A1220F;">TORU IWATANI</div><div style="font-family:'Press Start 2P'; font-size:1rem; background:#E31C23; color:#FFE484; display:inline-block; padding:8px 18px; border-radius:40px; margin:12px 0;">BORN: JAN 25, 1955  |  ALIVE AND LEGENDARY</div><div class="arcade-text">Japanese game designer, creator of Pac-Man (1980). Designed to move away from violent shooters. Philosophy: a game about eating, not killing.</div></div></div><footer>"Design games that make people smile" - Toru Iwatani</footer>`;
             document.getElementById('characters-page').innerHTML = `<div class="section-title">MAZE HUNTERS AND GHOST SQUAD</div><div class="character-viewer"><div class="char-description" id="charDescGeo">Click the YELLOW button (3) to cycle characters</div><div class="char-box"><div class="char-shape-canvas"><canvas id="geoCanvasRedesign" class="geo-canvas" width="300" height="300" style="width:175px; height:175px"></canvas></div><div id="charNameGeo" class="char-name">PAC-MAN</div><div id="charDescGeo" class="char-description-text">The hungry yellow hero. Eats dots and avoids ghosts. No eyes — pure instinct.</div></div><div class="char-hint">🟡 PRESS THE YELLOW BUTTON (3) TO SEE THE NEXT CHARACTER 🟡</div></div><div class="info-card" style="text-align:center;"><div class="arcade-text">Each ghost has a unique AI personality. Blinky chases, Pinky ambushes, Inky flanks, Clyde roams.</div></div><footer>Classic ghost AI: unpredictable and iconic</footer>`;
-            document.getElementById('howto-page').innerHTML = `<div class="section-title">ARCADE INSTRUCTIONS</div><div class="grid-2col"><div class="grid-item"><div class="badge">OBJECTIVE</div><div class="arcade-text">Eat all dots while avoiding ghosts.</div></div><div class="grid-item"><div class="badge">CONTROLS</div><div class="arcade-text">Arcade buttons or joystick - navigate pages</div></div><div class="grid-item"><div class="badge">POWER PELLETS</div><div class="arcade-text">Four flashing dots, ghosts turn blue and flee.</div></div><div class="grid-item"><div class="badge">FRUIT BONUSES</div><div class="arcade-text">Cherry, Strawberry, Orange, Apple</div></div></div><div class="tip-section"><div class="badge" style="background:#FFB347;">GHOST BEHAVIOR DEEP DIVE</div><div class="arcade-text">Blinky: Direct chase. Pinky: Ambush ahead. Inky: Complex flanking. Clyde: Random when close.</div></div><footer>Master patterns and turn the tables on ghosts</footer>`;
-            // Initial play page placeholder
-            document.getElementById('play-page').innerHTML = `<div class="empty-page"><div>🎮 PRESS THE PLAY BUTTON 🎮<br><br>Click the arcade PLAY button (2) to load play.html inside this window!</div></div>`;
+            document.getElementById('howto-page').innerHTML = `<div class="section-title">ARCADE INSTRUCTIONS</div><div class="grid-2col"><div class="grid-item"><div class="badge">OBJECTIVE</div><div class="arcade-text">Eat all dots while avoiding ghosts.</div></div><div class="grid-item"><div class="badge">CONTROLS</div><div class="arcade-text">DRAG THE JOYSTICK to move Pac-Man!</div></div><div class="grid-item"><div class="badge">POWER PELLETS</div><div class="arcade-text">Four flashing dots, ghosts turn blue and flee.</div></div><div class="grid-item"><div class="badge">FRUIT BONUSES</div><div class="arcade-text">Cherry, Strawberry, Orange, Apple</div></div></div><div class="tip-section"><div class="badge" style="background:#FFB347;">GHOST BEHAVIOR DEEP DIVE</div><div class="arcade-text">Blinky: Direct chase. Pinky: Ambush ahead. Inky: Complex flanking. Clyde: Random when close.</div></div><footer>Master patterns and turn the tables on ghosts</footer>`;
+            document.getElementById('play-page').innerHTML = `<div class="empty-page"><div>🎮 PRESS THE PLAY BUTTON 🎮<br><br>Click PLAY, wait for game to load, then DRAG THE JOYSTICK!</div></div>`;
         }
         
         const pages = {
@@ -878,7 +854,6 @@
                 }, 30);
             }
             
-            // When switching TO play page, embed the game
             if (pageId === 'play') {
                 embedPlayGame();
             }
@@ -904,72 +879,130 @@
             });
         }
         
-        // Electrical switches (visual)
         document.getElementById('electricalSwitch1')?.addEventListener('click', function() { this.classList.toggle('active'); });
         document.getElementById('electricalSwitch2')?.addEventListener('click', function() { this.classList.toggle('active'); });
         
-        // JOYSTICK - visual only
+        // ==============================================
+        // 🎮 NEW JOYSTICK CODE - SENDS COMMANDS TO play.html
+        // ==============================================
+        
         const joyBase = document.getElementById('joystickBase');
         const joyHandle = document.getElementById('joystickHandle');
-        let dragActive = false;
-        const LIMIT = 26;
+        const statusDiv = document.getElementById('directionStatus');
+        let dragActiveJoystick = false;
+        let lastDirection = 'CENTER';
+        const JOY_LIMIT = 26;
         
-        function getVector(cx, cy) {
+        function getGameIframe() {
+            return document.querySelector('.game-frame');
+        }
+        
+        function sendDirectionToGame(direction) {
+            const iframe = getGameIframe();
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ 
+                    type: 'JOYSTICK_MOVE', 
+                    direction: direction 
+                }, '*');
+                console.log('📤 Sent to game:', direction);
+                return true;
+            }
+            return false;
+        }
+        
+        function getJoystickVector(cx, cy) {
+            if (!joyBase) return { x: 0, y: 0, active: false };
             const rect = joyBase.getBoundingClientRect();
             const dx = cx - (rect.left + rect.width/2);
             const dy = cy - (rect.top + rect.height/2);
-            const dist = Math.min(LIMIT, Math.hypot(dx, dy));
-            if (dist < 6) return { x: 0, y: 0, active: false };
+            const dist = Math.min(JOY_LIMIT, Math.hypot(dx, dy));
+            if (dist < 8) return { x: 0, y: 0, active: false };
             const ang = Math.atan2(dy, dx);
             return { x: Math.cos(ang) * dist, y: Math.sin(ang) * dist, active: true };
         }
         
-        function updateStick(cx, cy) {
-            if (!dragActive) return;
-            const off = getVector(cx, cy);
-            if (off.active) {
-                joyHandle.style.transform = `translate(calc(-50% + ${off.x}px), calc(-50% + ${off.y}px))`;
-                let dir = "CENTER";
-                if (Math.abs(off.x) > 8 || Math.abs(off.y) > 8) {
-                    if (Math.abs(off.x) > Math.abs(off.y)) dir = off.x > 0 ? "RIGHT" : "LEFT";
-                    else dir = off.y > 0 ? "DOWN" : "UP";
-                }
-                document.getElementById('directionStatus').innerText = `🎮 STICK: ${dir} (visual only)`;
+        function getJoystickDirection(off) {
+            if (!off.active) return 'CENTER';
+            if (Math.abs(off.x) > Math.abs(off.y)) {
+                return off.x > 0 ? 'RIGHT' : 'LEFT';
             } else {
-                joyHandle.style.transform = `translate(-50%, -50%)`;
-                document.getElementById('directionStatus').innerText = `🎮 PRESS PLAY BUTTON → play.html loads INSIDE the page!`;
+                return off.y > 0 ? 'DOWN' : 'UP';
             }
         }
         
-        function onStart(e) {
-            dragActive = true;
-            let cx, cy;
-            if (e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; e.preventDefault(); }
-            else { cx = e.clientX; cy = e.clientY; }
-            updateStick(cx, cy);
+        function updateJoystickStick(cx, cy) {
+            if (!dragActiveJoystick) return;
+            const off = getJoystickVector(cx, cy);
+            let currentDirection = 'CENTER';
+            
+            if (off.active) {
+                joyHandle.style.transform = `translate(calc(-50% + ${off.x}px), calc(-50% + ${off.y}px))`;
+                currentDirection = getJoystickDirection(off);
+                statusDiv.innerHTML = `🎮 JOYSTICK: ${currentDirection} → controlling Pac-Man!`;
+                statusDiv.style.color = "#88ff88";
+                statusDiv.style.background = "#000000cc";
+            } else {
+                joyHandle.style.transform = `translate(-50%, -50%)`;
+                currentDirection = 'CENTER';
+                statusDiv.innerHTML = `🎮 Joystick centered - Pac-Man stops moving`;
+                statusDiv.style.color = "#FFFFFF";
+            }
+            
+            if (currentDirection !== lastDirection) {
+                lastDirection = currentDirection;
+                const sent = sendDirectionToGame(currentDirection);
+                if (!sent && activePageId === 'play') {
+                    statusDiv.innerHTML = `🎮 ⚠️ Game loading... Wait a moment then try again!`;
+                }
+            }
         }
         
-        function onMove(e) {
-            if (!dragActive) return;
+        function onJoystickStart(e) {
+            dragActiveJoystick = true;
             let cx, cy;
-            if (e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; e.preventDefault(); }
-            else { cx = e.clientX; cy = e.clientY; }
-            updateStick(cx, cy);
+            if (e.touches) { 
+                cx = e.touches[0].clientX; 
+                cy = e.touches[0].clientY; 
+                e.preventDefault(); 
+            } else { 
+                cx = e.clientX; 
+                cy = e.clientY; 
+            }
+            updateJoystickStick(cx, cy);
         }
         
-        function onEnd() {
-            dragActive = false;
+        function onJoystickMove(e) {
+            if (!dragActiveJoystick) return;
+            let cx, cy;
+            if (e.touches) { 
+                cx = e.touches[0].clientX; 
+                cy = e.touches[0].clientY; 
+                e.preventDefault(); 
+            } else { 
+                cx = e.clientX; 
+                cy = e.clientY; 
+            }
+            updateJoystickStick(cx, cy);
+        }
+        
+        function onJoystickEnd() {
+            dragActiveJoystick = false;
             joyHandle.style.transform = `translate(-50%, -50%)`;
-            document.getElementById('directionStatus').innerText = `🎮 PRESS PLAY BUTTON → play.html loads INSIDE the page!`;
+            if (lastDirection !== 'CENTER') {
+                lastDirection = 'CENTER';
+                sendDirectionToGame('CENTER');
+            }
+            statusDiv.innerHTML = `🎮 Joystick released - Pac-Man stops`;
+            statusDiv.style.color = "#FFFFFF";
         }
         
         if (joyBase) {
-            joyBase.addEventListener('mousedown', onStart);
-            window.addEventListener('mousemove', onMove);
-            window.addEventListener('mouseup', onEnd);
-            joyBase.addEventListener('touchstart', onStart);
-            window.addEventListener('touchmove', onMove);
-            window.addEventListener('touchend', onEnd);
+            joyBase.addEventListener('mousedown', onJoystickStart);
+            window.addEventListener('mousemove', onJoystickMove);
+            window.addEventListener('mouseup', onJoystickEnd);
+            joyBase.addEventListener('touchstart', onJoystickStart);
+            window.addEventListener('touchmove', onJoystickMove);
+            window.addEventListener('touchend', onJoystickEnd);
         }
         
         // Start with HOME page
@@ -977,6 +1010,8 @@
         
         const toruImage = document.getElementById('toruImg');
         if (toruImage) toruImage.onerror = () => toruImage.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Toru_Iwatani_2011.jpg/440px-Toru_Iwatani_2011.jpg";
+        
+        console.log('✅ Wiki page loaded - Joystick now sends commands to play.html!');
     </script>
 </body>
 </html>
