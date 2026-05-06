@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Pac-Man - Ghost Spawn: Restored + More Space</title>
+    <title>Pac-Man - Joystick Controlled + Ghost Spawn</title>
     <style>
         * {
             user-select: none;
@@ -96,6 +96,15 @@
             text-transform: uppercase;
         }
 
+        .joystick-status {
+            font-size: 0.9rem;
+            background: #000000cc;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            color: #88ff88;
+            font-family: monospace;
+        }
+
         /* Ready Overlay */
         .ready-overlay {
             position: fixed;
@@ -172,10 +181,11 @@
             <div class="lives-box">❤️ LIVES: <span id="livesValue">3</span></div>
             <button class="restart-btn" id="restartButton">🔄 RESTART</button>
             <div class="status" id="gameStatusText">⏸ READY</div>
+            <div class="joystick-status" id="joystickStatus">🎮 Waiting for joystick...</div>
         </div>
     </div>
     <div style="text-align:center; margin-top: 1rem; color:#aaa; font-size:13px;">
-        ⬆️ ⬇️ ⬅️ ➡️  or  WASD  |  Ghosts have more space in spawn | Click READY to start
+        🎮 JOYSTICK SUPPORT ADDED! | Drag joystick in wiki page to move Pac-Man | Also ⬆️ ⬇️ ⬅️ ➡️ or WASD
     </div>
 </div>
 
@@ -183,6 +193,7 @@
     (function(){
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const joystickStatusEl = document.getElementById('joystickStatus');
 
         const CELL_SIZE = 20;
         const MAP_COLS = 28;
@@ -296,38 +307,28 @@
             }
             
             // ===== GHOST SPAWN MODIFICATIONS =====
+            maze[14][13] = 1;
+            maze[14][14] = 1;
             
-            // 1. RESTORE the 2 missing blocks inside the ghost spawn (columns 13 and 14 at row 14)
-            // These were previously removed, now put them back as walls (1)
-            maze[14][13] = 1;  // Block at row 14, col 13
-            maze[14][14] = 1;  // Block at row 14, col 14
-            
-            // 2. REMOVE blocks ABOVE the ghost spawn to create exit paths (rows 9-11)
-            // Remove the top barrier walls to let ghosts exit upward
             for (let col = 10; col <= 17; col++) {
                 if (maze[9][col] === 1) maze[9][col] = 0;
                 if (maze[10][col] === 1) maze[10][col] = 0;
                 if (maze[11][col] === 1) maze[11][col] = 0;
             }
             
-            // 3. ADD MORE SPACE inside the ghost spawn - remove additional interior walls
-            // Remove the interior dividers to create a larger open area
             for (let row = 13; row <= 17; row++) {
                 for (let col = 11; col <= 16; col++) {
                     if (maze[row][col] === 1 && !(row === 14 && (col === 13 || col === 14))) {
-                        // Keep the two restored blocks, remove others
                         maze[row][col] = 0;
                     }
                 }
             }
             
-            // Also remove the horizontal walls inside the spawn at rows 13 and 17
             for (let col = 11; col <= 16; col++) {
                 if (maze[13][col] === 1) maze[13][col] = 0;
                 if (maze[17][col] === 1) maze[17][col] = 0;
             }
             
-            // Remove pellets inside the ghost spawn area
             for (let row = 13; row <= 17; row++) {
                 for (let col = 11; col <= 16; col++) {
                     if (maze[row][col] === 2 || maze[row][col] === 3) {
@@ -383,6 +384,58 @@
             if(col<0 || col>=MAP_COLS || row<0 || row>=MAP_ROWS) return false;
             return maze[row][col] !== 1;
         }
+        
+        // ==============================================
+        // 🎮 JOYSTICK CONTROL - Added for wiki page!
+        // ==============================================
+        
+        // Listen for messages from parent window (wiki page joystick)
+        window.addEventListener('message', (event) => {
+            // Check if this is a joystick command
+            if (event.data && event.data.type === 'JOYSTICK_MOVE') {
+                const direction = event.data.direction;
+                
+                // Update status display
+                if (direction === 'CENTER') {
+                    joystickStatusEl.innerHTML = '🎮 Joystick: CENTER (waiting)';
+                    joystickStatusEl.style.color = '#aaa';
+                } else {
+                    joystickStatusEl.innerHTML = `🎮 Joystick: ${direction} → moving Pac-Man!`;
+                    joystickStatusEl.style.color = '#88ff88';
+                    setTimeout(() => {
+                        if (joystickStatusEl.innerHTML.includes(direction)) {
+                            joystickStatusEl.style.color = '#aaa';
+                        }
+                    }, 300);
+                }
+                
+                // Only process if game is active
+                if (!gameActive) return;
+                
+                // Convert joystick direction to Pac-Man direction
+                let newDir = null;
+                switch(direction) {
+                    case 'UP': newDir = 'UP'; break;
+                    case 'DOWN': newDir = 'DOWN'; break;
+                    case 'LEFT': newDir = 'LEFT'; break;
+                    case 'RIGHT': newDir = 'RIGHT'; break;
+                    case 'CENTER': 
+                        // Do nothing - keep current direction
+                        return;
+                }
+                
+                if (newDir) {
+                    // Set Pac-Man's next direction (same as keyboard logic)
+                    pacman.nextDir = newDir;
+                    console.log('🎮 Joystick command received:', direction);
+                }
+            }
+        });
+        
+        // Optional: Send a ready message to parent when game loads
+        window.parent.postMessage({ type: 'GAME_READY', status: 'loaded' }, '*');
+        
+        // ==============================================
         
         function updatePacmanMovement() {
             if(!gameActive) return;
@@ -651,7 +704,6 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Draw maze
             for(let row=0; row<MAP_ROWS; row++) {
                 for(let col=0; col<MAP_COLS; col++) {
                     let cell = maze[row][col];
@@ -679,7 +731,6 @@
                 }
             }
             
-            // Highlight ghost spawn area (subtle)
             ctx.globalAlpha = 0.15;
             for(let r=12; r<=18; r++) {
                 for(let c=10; c<=17; c++) {
@@ -691,7 +742,6 @@
             }
             ctx.globalAlpha = 1;
             
-            // Draw ghosts
             for(let g of ghosts) {
                 let t = g.progress;
                 let drawX = (g.x * (1-t) + g.targetX * t) * CELL_SIZE;
@@ -699,7 +749,6 @@
                 drawGhost(g, drawX, drawY, ghostEatMode && powerTimer > 0);
             }
             
-            // Draw Pac-Man
             let tPac = moveProgress;
             let drawPacX = (pacman.x * (1-tPac) + pacmanTarget.x * tPac) * CELL_SIZE;
             let drawPacY = (pacman.y * (1-tPac) + pacmanTarget.y * tPac) * CELL_SIZE;
@@ -737,7 +786,6 @@
             document.getElementById('livesValue').innerText = lives;
         }
         
-        // Countdown and Ready System
         let countdownInterval = null;
         
         function showReadyScreen() {
@@ -839,6 +887,9 @@
         
         // Start the drawing loop
         gameLoop();
+        
+        // Log that joystick listener is active
+        console.log('✅ play.html loaded - Joystick listener active! Waiting for messages from parent wiki page.');
     })();
 </script>
 </body>
