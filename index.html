@@ -570,7 +570,6 @@
             padding-top: 1rem;
             color: #6A2E1A;
         }
-        /* Game iframe styles */
         .game-iframe-container {
             background: #000000;
             border-radius: 28px;
@@ -609,7 +608,7 @@
     <div class="arcade-header">
         <div class="header-top">
             <div class="title-area">
-                <h1>PAC-MAN WIKI</h1>
+                <h1>TITO'S PAC-MAN WIKI</h1>
                 <p>👾 JOYSTICK CONTROLS PAC-MAN!</p>
             </div>
             <div id="header2Buttons" class="header2-buttons">
@@ -811,10 +810,15 @@
         }
         
         function buildFullPages() {
-            document.getElementById('home-page').innerHTML = `<div class="section-title">WELCOME!!</div><div class="arcade-text">To the Ultimate Pac-Man Wiki!</div><div class="info-card"><div class="arcade-text">Use the arcade buttons above to navigate.<br><br>Press the <span style="background:#8B0000; color:#FFD966; padding:0 8px; border-radius:20px;">PLAY BUTTON</span> then DRAG THE JOYSTICK to control Pac-Man!</div></div><div class="tip-section"><div class="badge">🎮 TIP</div><div class="arcade-text">The red joystick now ACTUALLY controls Pac-Man in real-time via postMessage!</div></div><footer>PAC-MAN - NAMCO 1980 - JOYSTICK INTEGRATION</footer>`;
+            // UPDATED HOME PAGE TEXT
+            document.getElementById('home-page').innerHTML = `<div class="section-title">WELCOME!!</div><div class="arcade-text">Welcome to the ultimate <span style="color:#E31C23; font-weight:bold;">TITO'S PAC-MAN WIKI</span>!</div><div class="info-card"><div class="arcade-text">Navigate the pages with the buttons above, discover which button leads to what, and play the game of Pac-Man using the joystick!<br><br>Enjoy the platform and have fun!</div></div><div class="tip-section"><div class="badge">🎮 HOW TO PLAY</div><div class="arcade-text">1. Click the PLAY button<br>2. Wait for the game to load<br>3. DRAG THE RED JOYSTICK to move Pac-Man!<br>4. Eat dots, avoid ghosts, and have fun!</div></div><footer>PAC-MAN - NAMCO 1980 - TITO'S ARCADE WIKI</footer>`;
+            
             document.getElementById('creator-page').innerHTML = `<div class="section-title">TORU IWATANI - MASTER MIND</div><div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; margin: 1rem 0;"><img id="toruImg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Toru_Iwatani_2011.jpg/440px-Toru_Iwatani_2011.webp" alt="Toru Iwatani" style="width: 220px; border-radius: 28px; border: 5px solid #E31C23; background: white;"><div><div style="font-family:'Press Start 2P'; font-size:1.4rem; color:#A1220F;">TORU IWATANI</div><div style="font-family:'Press Start 2P'; font-size:1rem; background:#E31C23; color:#FFE484; display:inline-block; padding:8px 18px; border-radius:40px; margin:12px 0;">BORN: JAN 25, 1955  |  ALIVE AND LEGENDARY</div><div class="arcade-text">Japanese game designer, creator of Pac-Man (1980). Designed to move away from violent shooters. Philosophy: a game about eating, not killing.</div></div></div><footer>"Design games that make people smile" - Toru Iwatani</footer>`;
+            
             document.getElementById('characters-page').innerHTML = `<div class="section-title">MAZE HUNTERS AND GHOST SQUAD</div><div class="character-viewer"><div class="char-description" id="charDescGeo">Click the YELLOW button (3) to cycle characters</div><div class="char-box"><div class="char-shape-canvas"><canvas id="geoCanvasRedesign" class="geo-canvas" width="300" height="300" style="width:175px; height:175px"></canvas></div><div id="charNameGeo" class="char-name">PAC-MAN</div><div id="charDescGeo" class="char-description-text">The hungry yellow hero. Eats dots and avoids ghosts. No eyes — pure instinct.</div></div><div class="char-hint">🟡 PRESS THE YELLOW BUTTON (3) TO SEE THE NEXT CHARACTER 🟡</div></div><div class="info-card" style="text-align:center;"><div class="arcade-text">Each ghost has a unique AI personality. Blinky chases, Pinky ambushes, Inky flanks, Clyde roams.</div></div><footer>Classic ghost AI: unpredictable and iconic</footer>`;
+            
             document.getElementById('howto-page').innerHTML = `<div class="section-title">ARCADE INSTRUCTIONS</div><div class="grid-2col"><div class="grid-item"><div class="badge">OBJECTIVE</div><div class="arcade-text">Eat all dots while avoiding ghosts.</div></div><div class="grid-item"><div class="badge">CONTROLS</div><div class="arcade-text">DRAG THE JOYSTICK to move Pac-Man!</div></div><div class="grid-item"><div class="badge">POWER PELLETS</div><div class="arcade-text">Four flashing dots, ghosts turn blue and flee.</div></div><div class="grid-item"><div class="badge">FRUIT BONUSES</div><div class="arcade-text">Cherry, Strawberry, Orange, Apple</div></div></div><div class="tip-section"><div class="badge" style="background:#FFB347;">GHOST BEHAVIOR DEEP DIVE</div><div class="arcade-text">Blinky: Direct chase. Pinky: Ambush ahead. Inky: Complex flanking. Clyde: Random when close.</div></div><footer>Master patterns and turn the tables on ghosts</footer>`;
+            
             document.getElementById('play-page').innerHTML = `<div class="empty-page"><div>🎮 PRESS THE PLAY BUTTON 🎮<br><br>Click PLAY, wait for game to load, then DRAG THE JOYSTICK!</div></div>`;
         }
         
@@ -883,7 +887,7 @@
         document.getElementById('electricalSwitch2')?.addEventListener('click', function() { this.classList.toggle('active'); });
         
         // ==============================================
-        // 🎮 NEW JOYSTICK CODE - SENDS COMMANDS TO play.html
+        // 🎮 JOYSTICK CODE - SENDS COMMANDS TO play.html
         // ==============================================
         
         const joyBase = document.getElementById('joystickBase');
